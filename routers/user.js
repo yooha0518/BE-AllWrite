@@ -22,6 +22,7 @@ userRouter.post('/resetPassword', userController.resetPassword);
 //사용자 비밀번호 변경
 userRouter.post('/changePassword', getUserFromJwt, userController.putPassword);
 
+
 //사용자 프로필사진 등록
 userRouter.post(
 	'/profileImage',
@@ -40,6 +41,10 @@ userRouter.delete(
 userRouter.post('/emailAuth', userController.getUser);
 
 //사용자 진짜 삭제
-userRouter.delete('/:shortId', userController.realDeleteUser);
+userRouter.delete('/:email', userController.realDeleteUser);
+
+//특정 유저 검색
+userRouter.get('/:email',userController.getOneUser);
+
 
 module.exports = userRouter;
