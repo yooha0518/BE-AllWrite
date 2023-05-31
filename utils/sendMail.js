@@ -13,13 +13,7 @@ const userTo = '518hayoung@gmail.com';
 
 let contentMessage = '';
 
-const setMailOption = (to, subject, text) => {
-	if (subject === 'All Write 임시 비밀번호') {
-		contentMessage = '로그인후 비밀번호를 변경해 주세요.';
-	} else {
-		contentMessage = 'All Write의 인증번호 입니다. 인증을 완료해 주세요.';
-	}
-
+const setMailOption = (to, subject, text, contentMessage, fontSize) => {
 	const { html } = mjml2html(
 		`
     <mjml>
@@ -34,7 +28,7 @@ const setMailOption = (to, subject, text) => {
     <mj-section border-left="2px solid #b0b0b0" border-right="2px solid #b0b0b0" padding="60px 0px">
       <mj-column>
         <mj-text padding="4px 25px">
-          <div style="text-align: center;"><span style="background-color: rgba(0, 0, 0, 0);"><font size="7">${text}</font></span></div>
+          <div style="text-align: center;"><span style="background-color: rgba(0, 0, 0, 0);"><font size=${fontSize}>${text}</font></span></div>
         </mj-text>
       </mj-column>
     </mj-section>

@@ -18,17 +18,21 @@ const userService = {
 		const user = await User.findOne({ email });
 		return user;
 	},
-	async getUserpassword(shortId) {
-		const user = await User.findOne({ shortId }, 'password');
+	async getUserpassword(email) {
+		const user = await User.findOne({ email }, 'password');
+		return user;
+	},
+	async getUserNickname(email) {
+		const user = await User.findOne({ email }, 'nickName');
 		return user;
 	},
 	async getUserFromEmail(email) {
 		const user = await User.findOne({ email });
 		return user;
 	},
-	async getUserForToken(shortId) {
+	async getUserForToken(email) {
 		const user = await User.findOne(
-			{ shortId },
+			{ email },
 			{
 				nickName: 1,
 				name: 1,
@@ -40,22 +44,23 @@ const userService = {
 		);
 		return user;
 	},
-	async getUserRefreshToken(shortId) {
-		const user = await User.findOne({ shortId }, 'refreshToken');
+	async getUserRefreshToken(email) {
+		const user = await User.findOne({ email }, 'refreshToken');
 		return user;
 	},
 	// 사용자 정보 수정
-	async updateUser(shortId, { name, nickName, intro,mbti,job,state }) {
+	async updateUser(email, user) {
+		const { nickName, name, intro, mbti, job, state } = user;
 		//성공여부, 조건에 맞는 문서의 수, 새로 생성된 문서의 수, 새로 생성된 문서의 id값이 들어있음
 		const result = await User.updateOne(
-			{ shortId },
+			{ email },
 			{
 				name,
 				nickName,
 				intro,
 				mbti,
 				job,
-				state
+				state,
 			}
 		);
 		if (result.modifiedCount === 0) {
@@ -89,9 +94,9 @@ const userService = {
 			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
 		};
 	},
-	async updatePasswordFromShortId(shortId, password) {
+	async updatePasswordFromemail(email, password) {
 		const result = await User.updateOne(
-			{ shortId },
+			{ email },
 			{
 				password: hashPassword(password),
 				isTempPassword: false,
@@ -102,20 +107,20 @@ const userService = {
 		};
 	},
 	// 사용자 삭제 (회원탈퇴)
-	async deleteUser(shortId) {
-		await User.updateOne({ shortId }, { $set: { state: false } });
+	async deleteUser(email) {
+		await User.updateOne({ email }, { $set: { state: false } });
 		return { message: '계정이 탈퇴 되었습니다.' };
 	},
-	async realDeleteUser(shortId) {
-		const deleteResult = await User.deleteOne({ shortId });
+	async realDeleteUser(email) {
+		const deleteResult = await User.deleteOne({ email });
 		console.log(deleteResult);
 		return { message: '계정이 영구삭제 되었습니다.' };
 	},
 
-	//관리자 - 사용자 검색
-	async adminReadSearchUser(name) {
-		const userlist = await User.find({ name });
-		return userlist;
+	//특정 사용자 조회
+	async adminReadSearchUser(email) {
+		const user = await User.findOne({ email });
+		return user;
 	},
 	//관리자 - 사용자 전체 정보 조회
 	async adminReadUser(page) {

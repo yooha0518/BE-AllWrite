@@ -59,7 +59,13 @@ const userController = {
 				} else {
 					//회원가입 성공 및 토큰 발급
 					const authCode = generateRandomPassword();
-					await sendMail(email, `All Write 인증번호`, `${authCode}`);
+					await sendMail(
+						email,
+						`All Write 인증번호`,
+						'All Write 임시 비밀번호',
+						`${authCode}`,
+						7
+					);
 					console.log('토큰 만들기 실행');
 					res.send(setAuthCodeToken(authCode));
 				}
@@ -141,7 +147,13 @@ const userController = {
 			}
 
 			await userService.updatePasswordFromEmail(email, tempPassword);
-			await sendMail(email, 'All Write 임시 비밀번호', `${tempPassword}`);
+			await sendMail(
+				email,
+				'All Write 임시 비밀번호',
+				`${tempPassword}`,
+				`로그인후 비밀번호를 변경해 주세요.`,
+				7
+			);
 
 			res
 				.status(200)
@@ -155,9 +167,9 @@ const userController = {
 	},
 	async putPassword(req, res) {
 		try {
-			const { nickName } = req.user;
+			const { email } = req.user;
 			const { currentPassword, password } = req.body;
-			const user = await userService.getUserpassword(nickName);
+			const user = await userService.getUserpassword(email);
 
 			console.log('user', user);
 			console.log('currentPassword', currentPassword);
@@ -167,7 +179,7 @@ const userController = {
 					.status(400)
 					.json({ message: '비밀번호가 일치하지 않습니다.' });
 			} else {
-				await userService.updatePasswordFromnickName(nickName, password);
+				await userService.updatePasswordFromEmail(email, password);
 
 				res.status(200).json({ message: '비밀번호가 변경되었습니다.' });
 			}
@@ -180,8 +192,8 @@ const userController = {
 	},
 	async deleteUser(req, res) {
 		try {
-			const nickName = req.user.nickName;
-			const user = await userService.deleteUser(nickName);
+			const email = req.user.email;
+			const user = await userService.deleteUser(email);
 			res.json(user);
 		} catch (error) {
 			console.log(error);
@@ -192,7 +204,7 @@ const userController = {
 	},
 	async realDeleteUser(req, res) {
 		try {
-			const nickName = req.params.nickName;
+			const email = req.params.email;
 			const user = await userService.realDeleteUser(nickName);
 			res.json(user);
 		} catch (error) {
@@ -218,6 +230,7 @@ const userController = {
 				return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
 			}
 
+			console.log('authUser-> user: ', user);
 			res.send(setUserToken(user, 0));
 		} catch (error) {
 			console.log(error);
@@ -227,17 +240,19 @@ const userController = {
 		}
 	},
 	async createAccessToken(req, res) {
-		const { nickName } = req.user;
+		const { email } = req.user;
 
-		const userForToken = await userService.getUserForToken(nickName);
+		const userForToken = await userService.getUserForToken(email);
 		res.send(setUserToken(userForToken, 1));
 	},
-	async adminGetUser(req, res) {
+	async getOneUser(req, res) {
 		try {
-			const { name } = req.params;
-			console.log(name);
-			const userlist = await userService.adminReadSearchUser(name);
-			res.json(userlist);
+			const { email } = req.params;
+			const user = await userService.adminReadSearchUser(email);
+			if (!user) {
+				return res.status(400).json({ message: '해당 유저가 없습니다.' });
+			}
+			res.json(user);
 		} catch (error) {
 			console.log(error);
 			return res
@@ -257,29 +272,45 @@ const userController = {
 				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
 		}
 	},
-	// async adminUpdateUser(req, res) {
-	// 	try {
-	// 		const { nickName } = req.params;
-	// 		const { name, profileImage, state } =
-	// 			req.body;
+	async adminUpdateUser(req, res) {
+		try {
+			const { email } = req.params;
 
-	// 		const result = await userService.updateUser(nickName, {
-	// 			name,
-	// 			state,
-	// 		});
-	// 		res.status(200).json(result);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return res
-	// 			.status(500)
-	// 			.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
-	// 	}
-	// },
+			const result = await userService.updateUser(email, req.body);
+			res.status(200).json(result);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+		}
+	},
 	async adminDeleteUser(req, res) {
 		try {
-			const { nickName } = req.params;
-			const result = await userService.deleteUser(nickName);
+			const { email } = req.params;
+			const result = await userService.deleteUser(email);
 			res.send(result);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+		}
+	},
+	async adminsendEmail(req, res) {
+		try {
+			const { email } = req.body;
+			const user = await userService.getUserNickname(email);
+			await sendMail(
+				email,
+				`All Write 경고`,
+				`${user.nickName}님이 작성하신 글이 신고접수 되었습니다. `,
+				`신고 접수가 누적될경우, 예고없이 강제 탈퇴될 수 있습니다.`,
+				4
+			);
+			res
+				.status(200)
+				.json({ message: `${email}으로 경고메일을 전송했습니다.` });
 		} catch (error) {
 			console.log(error);
 			return res
