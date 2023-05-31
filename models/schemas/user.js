@@ -4,6 +4,7 @@ const UserSchema = new Schema(
 		nickName: {
 			type: String,
 			required: true,
+			unique: true,
 		},
 		name: {
 			type: String,
@@ -19,12 +20,29 @@ const UserSchema = new Schema(
 			required: true,
 			select: false,
 		},
+		mbti: {
+			type: String,
+			default: null,
+		},
+		job: {
+			type: String,
+			default: null,
+		},
+		intro: {
+			type: String,
+			default: null,
+		},
 		profileImage: {
 			type: String,
+			default: 'http://localhost:5000/defaultImage.png',
 		},
 		refreshToken: {
 			type: String,
 			select: false,
+		},
+		isAdmin: {
+			type: Boolean,
+			default: false,
 		},
 		isTempPassword: {
 			type: Boolean,

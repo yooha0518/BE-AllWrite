@@ -3,18 +3,19 @@ const hashPassword = require('../utils/hash-password');
 
 const userService = {
 	// 사용자 생성 (회원가입)
-	async createUser({ email, password, name }) {
+	async createUser({ email, password, name, nickName }) {
 		const hashedPassword = hashPassword(password); // 비밀번호 해쉬값 만들기
 		const createdUser = await User.create({
 			email,
 			password: hashedPassword,
 			name,
+			nickName,
 		});
 		return createdUser;
 	},
 	// 사용자 정보 조회
-	async getUser(shortId) {
-		const user = await User.findOne({ shortId });
+	async getUser(email) {
+		const user = await User.findOne({ email });
 		return user;
 	},
 	async getUserpassword(shortId) {
@@ -29,7 +30,7 @@ const userService = {
 		const user = await User.findOne(
 			{ shortId },
 			{
-				shortId: 1,
+				nickName: 1,
 				name: 1,
 				email: 1,
 				profileImage: 1,
@@ -44,14 +45,17 @@ const userService = {
 		return user;
 	},
 	// 사용자 정보 수정
-	async updateUser(shortId, { name, profileImage, state }) {
+	async updateUser(shortId, { name, nickName, intro,mbti,job,state }) {
 		//성공여부, 조건에 맞는 문서의 수, 새로 생성된 문서의 수, 새로 생성된 문서의 id값이 들어있음
 		const result = await User.updateOne(
 			{ shortId },
 			{
 				name,
-				profileImage,
-				state,
+				nickName,
+				intro,
+				mbti,
+				job,
+				state
 			}
 		);
 		if (result.modifiedCount === 0) {
@@ -62,9 +66,9 @@ const userService = {
 			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
 		};
 	},
-	async updateProfileImage(shortId, profileImage) {
+	async updateProfileImage(email, profileImage) {
 		const result = await User.updateOne(
-			{ shortId },
+			{ email },
 			{
 				profileImage,
 			}

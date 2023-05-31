@@ -10,8 +10,8 @@ const userController = {
 	async postUser(req, res, next) {
 		try {
 			console.log('회원가입(postUser) 시작');
-			const { email, password, name } = req.body;
-			const alreadyUser = await userService.getUserFromEmail(email);
+			const { email, password, name, nickName } = req.body;
+			let alreadyUser = await userService.getUserFromEmail(email);
 			if (alreadyUser) {
 				if (!alreadyUser.state) {
 					return res.status(400).json({ message: '탈퇴한 계정입니다.' });
@@ -20,10 +20,16 @@ const userController = {
 					.status(400)
 					.json({ message: '계정이 이미 가입되어있습니다.' });
 			}
+			alreadyUser = await userService.getUserFromEmail(nickName);
+			if (alreadyUser) {
+				return res.status(400).json({ message: '이미 사용중인 닉네임입니다.' });
+			}
+
 			const user = await userService.createUser({
 				email,
 				password,
 				name,
+				nickName,
 			});
 			req.user = user;
 			next();
@@ -40,8 +46,8 @@ const userController = {
 			const { email } = req.body;
 			let user = '';
 
+			//회원가입시, 이메일 본인인증
 			if (email) {
-				console.log('email if');
 				user = await userService.getUserFromEmail(email);
 				if (user) {
 					if (!user.state) {
@@ -51,14 +57,21 @@ const userController = {
 						.status(400)
 						.json({ message: '해당 메일은 이미 가입되어 있습니다.' });
 				} else {
+					//회원가입 성공 및 토큰 발급
 					const authCode = generateRandomPassword();
 					await sendMail(email, `All Write 인증번호`, `${authCode}`);
 					console.log('토큰 만들기 실행');
 					res.send(setAuthCodeToken(authCode));
 				}
 			} else {
-				const { shortId } = req.user;
-				user = await userService.getUser(shortId);
+				//일반 정보 조회
+				const { email } = req.user;
+				user = await userService.getUser(email);
+
+				//답변 불러오는 api 사용추가해야함!
+				// const answer = answerService.getTwoAnswer(nickName);
+				//const result = {user, ...answer}
+
 				return res.json(user);
 			}
 		} catch (error) {
@@ -70,11 +83,15 @@ const userController = {
 	},
 	async putUser(req, res) {
 		try {
-			const { shortId } = req.user;
-			const { name, profileImage } = req.body;
-			const result = await userService.updateUser(shortId, {
+			const { email } = req.user;
+			const { name, nickName, intro, mbti, job, state } = req.body;
+			const result = await userService.updateUser(email, {
 				name,
-				profileImage,
+				nickName,
+				intro,
+				mbti,
+				job,
+				state,
 			});
 			res.status(200).json(result);
 		} catch (error) {
@@ -87,12 +104,9 @@ const userController = {
 	async putProfileImage(req, res) {
 		try {
 			console.log('프로필사진 수정 시작');
-			const { shortId } = req.user;
-			const profileImage = `https://localhost:5000/${req.file.filename}`;
-			const result = await userService.updateProfileImage(
-				shortId,
-				profileImage
-			);
+			const { email } = req.user;
+			const profileImage = `http://localhost:5000/${req.file.filename}`;
+			const result = await userService.updateProfileImage(email, profileImage);
 			res.send(result);
 		} catch (error) {
 			console.log(error);
@@ -103,12 +117,9 @@ const userController = {
 	},
 	async deleteProfileImate(req, res) {
 		try {
-			const { shortId } = req.user;
-			const profileImage = `https://localhost:5000/defaultImage.png`;
-			const result = await userService.updateProfileImage(
-				shortId,
-				profileImage
-			);
+			const { email } = req.user;
+			const profileImage = `http://localhost:5000/defaultImage.png`;
+			const result = await userService.updateProfileImage(email, profileImage);
 			res.send(result);
 		} catch (error) {
 			console.log(error);
@@ -144,9 +155,9 @@ const userController = {
 	},
 	async putPassword(req, res) {
 		try {
-			const { shortId } = req.user;
+			const { nickName } = req.user;
 			const { currentPassword, password } = req.body;
-			const user = await userService.getUserpassword(shortId);
+			const user = await userService.getUserpassword(nickName);
 
 			console.log('user', user);
 			console.log('currentPassword', currentPassword);
@@ -156,11 +167,9 @@ const userController = {
 					.status(400)
 					.json({ message: '비밀번호가 일치하지 않습니다.' });
 			} else {
-				await userService.updatePasswordFromShortId(shortId, password);
+				await userService.updatePasswordFromnickName(nickName, password);
 
-				res
-					.status(200)
-					.json({ message: '비밀번호가 변경되었습니다.' });
+				res.status(200).json({ message: '비밀번호가 변경되었습니다.' });
 			}
 		} catch (error) {
 			console.log(error);
@@ -171,8 +180,8 @@ const userController = {
 	},
 	async deleteUser(req, res) {
 		try {
-			const shortId = req.user.shortId;
-			const user = await userService.deleteUser(shortId);
+			const nickName = req.user.nickName;
+			const user = await userService.deleteUser(nickName);
 			res.json(user);
 		} catch (error) {
 			console.log(error);
@@ -183,8 +192,8 @@ const userController = {
 	},
 	async realDeleteUser(req, res) {
 		try {
-			const shortId = req.params.shortId;
-			const user = await userService.realDeleteUser(shortId);
+			const nickName = req.params.nickName;
+			const user = await userService.realDeleteUser(nickName);
 			res.json(user);
 		} catch (error) {
 			console.log(error);
@@ -218,9 +227,9 @@ const userController = {
 		}
 	},
 	async createAccessToken(req, res) {
-		const { shortId } = req.user;
+		const { nickName } = req.user;
 
-		const userForToken = await userService.getUserForToken(shortId);
+		const userForToken = await userService.getUserForToken(nickName);
 		res.send(setUserToken(userForToken, 1));
 	},
 	async adminGetUser(req, res) {
@@ -250,11 +259,11 @@ const userController = {
 	},
 	// async adminUpdateUser(req, res) {
 	// 	try {
-	// 		const { shortId } = req.params;
+	// 		const { nickName } = req.params;
 	// 		const { name, profileImage, state } =
 	// 			req.body;
 
-	// 		const result = await userService.updateUser(shortId, {
+	// 		const result = await userService.updateUser(nickName, {
 	// 			name,
 	// 			state,
 	// 		});
@@ -268,8 +277,8 @@ const userController = {
 	// },
 	async adminDeleteUser(req, res) {
 		try {
-			const { shortId } = req.params;
-			const result = await userService.deleteUser(shortId);
+			const { nickName } = req.params;
+			const result = await userService.deleteUser(nickName);
 			res.send(result);
 		} catch (error) {
 			console.log(error);
