@@ -1,10 +1,6 @@
 const { Schema } = require('mongoose');
-const UserSchema = new Schema(
+const AdminSchema = new Schema(
 	{
-		nickName: {
-			type: String,
-			required: true,
-		},
 		name: {
 			type: String,
 			required: true,
@@ -18,9 +14,6 @@ const UserSchema = new Schema(
 			type: String,
 			required: true,
 			select: false,
-		},
-		profileImage: {
-			type: String,
 		},
 		refreshToken: {
 			type: String,
@@ -38,4 +31,4 @@ const UserSchema = new Schema(
 	{ timestamps: false }
 );
 
-module.exports = UserSchema;
+module.exports = AdminSchema;
