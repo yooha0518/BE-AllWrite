@@ -53,6 +53,12 @@ const friendService = {
 		const result = await Friend.findOne({ email }, 'req_friends');
 		return result.req_friends;
 	},
+	// 친구 요청 수락
+	async acceptFriend(email) {
+		const result = await Friend.updateOne({ email });
+		
+		return result;
+	},
 	// 친구 테이블 전체 정보 조회
 	async getFriend(email) {
 		const friend = await Friend.findOne({ email });
@@ -74,16 +80,6 @@ const friendService = {
 	// async adminReadSearchFriend(email) {
 	// 	const friend = await Friend.findOne({ email });
 	// 	return friend;
-	// },
-	// //친구 전체 조회
-	// async adminReadFriend(page) {
-	// 	const total = await Friend.countDocuments({});
-	// 	const friendList = await friend
-	// 		.find({ isAdmin: false })
-	// 		.sort({ name: 1 })
-	// 		.skip(7 * (page - 1))
-	// 		.limit(7);
-	// 	return [friendList, { total: total }];
 	// },
 };
 

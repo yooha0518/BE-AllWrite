@@ -1,6 +1,8 @@
-const userService = require('./userService');
-const friendService = require('./friendService');
+const userService = require("./userService");
+const questionService = require("./questionService");
+const answerService = require("./answerService");
 module.exports = {
-	userService,
-	friendService,
+  userService,
+  questionService,
+  answerService,
 };

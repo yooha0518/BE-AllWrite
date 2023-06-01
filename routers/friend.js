@@ -15,8 +15,8 @@ friendRouter.post('/request',getUserFromJwt, friendController.sendFriend);
 // //친구 정보 조회
 // friendRouter.get('/:email', getUserFromJwt, friendController.getOnefriend);
 
-// //친구 요청 수락
-//friendRouter.post('/response',getUserFromJwt, friendController.acceptFriend);
+//친구 요청 수락
+friendRouter.post('/response',getUserFromJwt, friendController.acceptFriend);
 
 //받은 친구요청 조회
 friendRouter.get('/request', getUserFromJwt, friendController.getReqfriend);

@@ -34,6 +34,10 @@ const UserSchema = new Schema(
 			type: String,
 			default: 'http://localhost:5000/defaultImage.png',
 		},
+		experience: {
+			type: Number,
+			default: 1,
+		},
 		refreshToken: {
 			type: String,
 			select: false,

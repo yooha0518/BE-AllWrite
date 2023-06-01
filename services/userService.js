@@ -131,6 +131,12 @@ const userService = {
 			.limit(7);
 		return [userlist, { total: total }];
 	},
+	// 관리자 - 답변 삭제
+	async adminDeleteAnswer(answerId) {
+		const deleteResult = await User.deleteOne({ answerId });
+		console.log(deleteResult);
+		return { message: '답변이 삭제 되었습니다.' };
+	},
 };
 
 module.exports = userService;

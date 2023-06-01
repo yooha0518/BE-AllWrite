@@ -1,55 +1,28 @@
-const { userService } = require('../services');
-const { friendService } = require('../services');
-const { setUserToken } = require('../utils/createjwt');
-const { User } = require('../models/index');
-const hashPassword = require('../utils/hash-password');
-const generateRandomPassword = require('../utils/generateRandomPassword.js');
-const sendMail = require('../utils/sendMail');
-const { setAuthCodeToken } = require('../utils/setAuthcodeToken');
+const { questionService } = require('../services');
+const { Question } = require('../models/index');
 
-const userController = {
-	async postUser(req, res, next) {
+
+const questionController = {
+  //질문 생성
+	async postQuestion(req, res, next) {
 		try {
-			console.log('회원가입(postUser) 시작');
-			const { email, password, name, nickName } = req.body;
-			let alreadyUser = await userService.getUserFromEmail(email);
-			if (alreadyUser) {
-				if (!alreadyUser.state) {
-					return res.status(400).json({ message: '탈퇴한 계정입니다.' });
-				}
-				return res
-					.status(400)
-					.json({ message: '계정이 이미 가입되어있습니다.' });
-			}
-			alreadyUser = await userService.getUserFromNickName(nickName);
-			if (alreadyUser) {
-				return res.status(400).json({ message: '이미 사용중인 닉네임입니다.' });
-			}
-
-			const user = await userService.createUser({
-				email,
-				password,
-				name,
-				nickName,
-			});
-
-			// //friend 테이블 만들기
-			await friendService.createFriend(email);
-
-
-			req.user = user;
+			console.log('질문 만들기!');
+			const { content } = req.body;
+			const question = await questionService.createQuestion({	content });
+			req.question = question;
 			next();
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: '서버의 questionContrller에서 에러가 났습니다.' });
 		}
 	},
-	async getUser(req, res) {
+  //질문 조회
+	async getQuestion(req, res) {
 		try {
-			console.log('getUser 실행');
-			const { email } = req.body;
+			console.log('getQuestion 실행');
+			const { QuestionId } = req.body;
 			let user = '';
 
 			//회원가입시, 이메일 본인인증
@@ -177,6 +150,9 @@ const userController = {
 			const { currentPassword, password } = req.body;
 			const user = await userService.getUserpassword(email);
 
+			console.log('user', user);
+			console.log('currentPassword', currentPassword);
+			console.log('currentPassword', hashPassword(currentPassword));
 			if (user.password !== hashPassword(currentPassword)) {
 				return res
 					.status(400)
@@ -233,6 +209,7 @@ const userController = {
 				return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
 			}
 
+			console.log('authUser-> user: ', user);
 			res.send(setUserToken(user, 0));
 		} catch (error) {
 			console.log(error);
@@ -350,4 +327,4 @@ const userController = {
 		},
 };
 
-module.exports = userController;
+module.exports = questionController;

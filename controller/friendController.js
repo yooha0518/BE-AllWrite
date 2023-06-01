@@ -48,7 +48,7 @@ const friendController = {
 			const alreadyRequest = await friendService.getRequest(friendNickName);
 
 			if (alreadyRequest) {
-				return res.status(400).json({ message: '이미 요청이 된 유저입니다.' });
+				return res.status(400).json({ message: '이미 요청한 유저입니다.' });
 			}
 
 			const alreadyresponse = await friendService.getResponse(friendNickName);
@@ -75,16 +75,17 @@ const friendController = {
 				.json({ message: '서버의 friendContrller에서 에러가 났습니다.' });
 		}
 	},
-	// //친구 요청 수락
-	// async acceptFriend(req, res) {
-	// 	try {
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return res
-	// 			.status(500)
-	// 			.json({ message: '서버의 friendContrller에서 에러가 났습니다.' });
-	// 	}
-	// },
+	//친구 요청 수락
+	async acceptFriend(req, res) {
+		try {
+			
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: '서버의 friendContrller에서 에러가 났습니다.' });
+		}
+	},
 	//받은 친구요청 조회
 	async getReqfriend(req, res) {
 		try {
