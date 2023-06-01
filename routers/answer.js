@@ -19,4 +19,4 @@ answerRouter.put('/:answerId',  answerController.putAnswer);
 answerRouter.delete('/:answerId', answerController.deleteAnswer);
 
 
-module.exports = userRouter;
+module.exports = answerRouter;
