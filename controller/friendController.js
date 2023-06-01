@@ -38,6 +38,20 @@ const friendController = {
 	},
 	async sendFriend(req, res) {
 		try {
+			const { email } = req.user;
+			const { friendNickName } = req.body;
+
+			const alreadyRequest = await friendService.getRequest(friendNickName);
+
+			if(alreadyRequest){
+				return res
+				.status(400)
+				.json({ message: '이미 요청이 된 유저입니다.' });
+			}
+
+			const result = await friendService.createFriendReq(email, friendNickName);
+
+			return res.status(200).json({ message: '친구 요청을 보냈습니다. ',result });
 		} catch (error) {
 			console.log(error);
 			return res

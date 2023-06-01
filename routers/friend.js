@@ -9,11 +9,11 @@ friendRouter.get('/', getUserFromJwt, friendController.getfriendtable);
 //친구 전체 조회
 friendRouter.get('/all', getUserFromJwt, friendController.getAllfriends);
 
-//친구 정보 조회
-friendRouter.get('/:email', getUserFromJwt, friendController.getOnefriend);
-
 //친구 요청
 friendRouter.post('/request',getUserFromJwt, friendController.sendFriend);
+
+//친구 정보 조회
+friendRouter.get('/:email', getUserFromJwt, friendController.getOnefriend);
 
 //친구 요청 수락
 friendRouter.post('/response',getUserFromJwt, friendController.acceptFriend);

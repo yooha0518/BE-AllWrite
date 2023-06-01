@@ -7,7 +7,7 @@ const FriendSchema = new Schema(
 		},
 		friends: [
 			{
-				email: {
+				friendNickName: {
 					type: String,
 					default: null,
 				},
@@ -15,7 +15,7 @@ const FriendSchema = new Schema(
 		],
 		req_friends: [
 			{
-				email: {
+				friendNickName: {
 					type: String,
 					default: null,
 				},
@@ -23,7 +23,7 @@ const FriendSchema = new Schema(
 		],
 		res_friends: [
 			{
-				email: {
+				friendNickName: {
 					type: String,
 					default: null,
 				},
