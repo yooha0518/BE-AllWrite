@@ -22,8 +22,8 @@ const userService = {
 		const user = await User.findOne({ email }, 'password');
 		return user;
 	},
-	async getUserFromNickName(nickName) {
-		const user = await User.findOne({ nickName });
+	async getUserNickname(email) {
+		const user = await User.findOne({ email }, 'nickName');
 		return user;
 	},
 	async getUserFromEmail(email) {

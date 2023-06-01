@@ -1,5 +1,4 @@
 const { userService } = require('../services');
-const { friendService } = require('../services');
 const { setUserToken } = require('../utils/createjwt');
 const { User } = require('../models/index');
 const hashPassword = require('../utils/hash-password');
@@ -21,7 +20,7 @@ const userController = {
 					.status(400)
 					.json({ message: '계정이 이미 가입되어있습니다.' });
 			}
-			alreadyUser = await userService.getUserFromNickName(nickName);
+			alreadyUser = await userService.getUserFromEmail(nickName);
 			if (alreadyUser) {
 				return res.status(400).json({ message: '이미 사용중인 닉네임입니다.' });
 			}
@@ -32,11 +31,6 @@ const userController = {
 				name,
 				nickName,
 			});
-
-			// //friend 테이블 만들기
-			await friendService.createFriend(email);
-
-
 			req.user = user;
 			next();
 		} catch (error) {
@@ -177,6 +171,9 @@ const userController = {
 			const { currentPassword, password } = req.body;
 			const user = await userService.getUserpassword(email);
 
+			console.log('user', user);
+			console.log('currentPassword', currentPassword);
+			console.log('currentPassword', hashPassword(currentPassword));
 			if (user.password !== hashPassword(currentPassword)) {
 				return res
 					.status(400)
@@ -233,6 +230,7 @@ const userController = {
 				return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
 			}
 
+			console.log('authUser-> user: ', user);
 			res.send(setUserToken(user, 0));
 		} catch (error) {
 			console.log(error);
