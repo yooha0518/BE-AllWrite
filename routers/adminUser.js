@@ -18,5 +18,8 @@ adminUserRouter.delete('/:email', authAdmin, userController.adminDeleteUser);
 //ADMIN 답변 전체 조회
 adminUserRouter.get('/:answerId', authAdmin, userController.adminDeleteAnswer);
 
+//ADMIN 신고된 답변 조회
+adminUserRouter.get("/complaint", authAdmin, userController.adminGetComplaint);
+
 
 module.exports = adminUserRouter;
