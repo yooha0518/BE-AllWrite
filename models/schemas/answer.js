@@ -30,7 +30,7 @@ const AnswerSchema = new Schema(
       },
       reportCount:{
         type:Number,
-        required : true,.
+        required : true,
       }
 	},
 	{ timestamps: true }
