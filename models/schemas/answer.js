@@ -1,15 +1,24 @@
 const { Schema } = require('mongoose');
-const QuestionSchema = new Schema(
+const AnswerSchema = new Schema(
 	{
-    //answerId = answer참조
-		answerId: {
+    //작성자 참조
+    nickName: {
 			type: Schema.Types.ObjectId,
-			ref: 'answer',
+			ref: 'user',
+		},
+    //answerId = answer참조
+		questionId: {
+			type: Schema.Types.ObjectId,
+			ref: 'question',
 		},
 		content:	{
         type: String,
         required: true,
 			},
+      stateCode:{
+        type:Boolean,
+        required: true,
+      },
       createdAt: {
         type: Date,
         default: Date.now,
@@ -19,8 +28,12 @@ const QuestionSchema = new Schema(
         type: Date,
         default: Date.now,
       },
+      reportCount:{
+        type:Number,
+        required : true,.
+      }
 	},
 	{ timestamps: true }
 );
 
-module.exports = QuestionSchema;
+module.exports = AnswerSchema;
