@@ -88,7 +88,7 @@ const AnswerController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
+				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' }); 
 		}
 	},
 	// 답변 삭제
