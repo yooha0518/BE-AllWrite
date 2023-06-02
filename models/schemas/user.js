@@ -4,11 +4,9 @@ const UserSchema = new Schema(
 		nickName: {
 			type: String,
 			required: true,
-			unique: true,
 		},
 		name: {
 			type: String,
-			required: true,
 		},
 		email: {
 			type: String,
@@ -35,6 +33,10 @@ const UserSchema = new Schema(
 		profileImage: {
 			type: String,
 			default: 'http://localhost:5000/defaultImage.png',
+		},
+		experience: {
+			type: Number,
+			default: 1,
 		},
 		refreshToken: {
 			type: String,

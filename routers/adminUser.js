@@ -13,8 +13,11 @@ adminUserRouter.post('/warning',getUserFromJwt, authAdmin, userController.admins
 //ADNIM 유저 정보 수정
 adminUserRouter.put('/:email',getUserFromJwt, authAdmin, userController.adminUpdateUser);
 
-//ADNIM 유저 정보 삭제
+//ADNIM 유저 휴면 전환
 adminUserRouter.delete('/:email', getUserFromJwt, authAdmin, userController.adminDeleteUser);
+
+//ADNIM 유저 정보 진짜 삭제
+adminUserRouter.delete('/delete/:email', userController.adminDeleteUser);
 
 //ADMIN 답변 전체 조회
 adminUserRouter.get('/:answerId', getUserFromJwt, authAdmin, userController.adminDeleteAnswer);
