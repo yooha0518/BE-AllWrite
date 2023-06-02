@@ -1,28 +1,29 @@
-const { userService } = require('../services');
-const { setUserToken } = require('../utils/createjwt');
-const { User } = require('../models/index');
-const hashPassword = require('../utils/hash-password');
-const generateRandomPassword = require('../utils/generateRandomPassword.js');
-const sendMail = require('../utils/sendMail');
-const { setAuthCodeToken } = require('../utils/setAuthcodeToken');
+const { userService } = require("../services");
+const { friendService } = require("../services");
+const { setUserToken } = require("../utils/createjwt");
+const { User, Friend } = require("../models/index");
+const hashPassword = require("../utils/hash-password");
+const generateRandomPassword = require("../utils/generateRandomPassword.js");
+const sendMail = require("../utils/sendMail");
+const { setAuthCodeToken } = require("../utils/setAuthcodeToken");
 
 const userController = {
 	async postUser(req, res, next) {
 		try {
-			console.log('회원가입(postUser) 시작');
+			console.log("회원가입(postUser) 시작");
 			const { email, password, name, nickName } = req.body;
 			let alreadyUser = await userService.getUserFromEmail(email);
 			if (alreadyUser) {
 				if (!alreadyUser.state) {
-					return res.status(400).json({ message: '탈퇴한 계정입니다.' });
+					return res.status(400).json({ message: "탈퇴한 계정입니다." });
 				}
 				return res
 					.status(400)
-					.json({ message: '계정이 이미 가입되어있습니다.' });
+					.json({ message: "계정이 이미 가입되어있습니다." });
 			}
-			alreadyUser = await userService.getUserFromEmail(nickName);
+			alreadyUser = await userService.getUserFromNickName(nickName);
 			if (alreadyUser) {
-				return res.status(400).json({ message: '이미 사용중인 닉네임입니다.' });
+				return res.status(400).json({ message: "이미 사용중인 닉네임입니다." });
 			}
 
 			const user = await userService.createUser({
@@ -31,42 +32,46 @@ const userController = {
 				name,
 				nickName,
 			});
+
+			// //friend 테이블 만들기
+			await friendService.createFriend(email);
+
 			req.user = user;
 			next();
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async getUser(req, res) {
 		try {
-			console.log('getUser 실행');
+			console.log("getUser 실행");
 			const { email } = req.body;
-			let user = '';
+			let user = "";
 
 			//회원가입시, 이메일 본인인증
 			if (email) {
 				user = await userService.getUserFromEmail(email);
 				if (user) {
 					if (!user.state) {
-						res.status(400).json({ message: '탈퇴한 계정입니다.' });
+						res.status(400).json({ message: "탈퇴한 계정입니다." });
 					}
 					return res
 						.status(400)
-						.json({ message: '해당 메일은 이미 가입되어 있습니다.' });
+						.json({ message: "해당 메일은 이미 가입되어 있습니다." });
 				} else {
 					//회원가입 성공 및 토큰 발급
 					const authCode = generateRandomPassword();
 					await sendMail(
 						email,
 						`All Write 인증번호`,
-						'All Write 임시 비밀번호',
+						"All Write 임시 비밀번호",
 						`${authCode}`,
 						7
 					);
-					console.log('토큰 만들기 실행');
+					console.log("토큰 만들기 실행");
 					res.send(setAuthCodeToken(authCode));
 				}
 			} else {
@@ -84,7 +89,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async putUser(req, res) {
@@ -104,12 +109,12 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async putProfileImage(req, res) {
 		try {
-			console.log('프로필사진 수정 시작');
+			console.log("프로필사진 수정 시작");
 			const { email } = req.user;
 			const profileImage = `http://localhost:5000/${req.file.filename}`;
 			const result = await userService.updateProfileImage(email, profileImage);
@@ -118,7 +123,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async deleteProfileImate(req, res) {
@@ -131,7 +136,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async resetPassword(req, res) {
@@ -143,13 +148,13 @@ const userController = {
 			if (user === null) {
 				return res
 					.status(400)
-					.json({ message: '해당 메일로 가입된 사용자가 없습니다.' });
+					.json({ message: "해당 메일로 가입된 사용자가 없습니다." });
 			}
 
 			await userService.updatePasswordFromEmail(email, tempPassword);
 			await sendMail(
 				email,
-				'All Write 임시 비밀번호',
+				"All Write 임시 비밀번호",
 				`${tempPassword}`,
 				`로그인후 비밀번호를 변경해 주세요.`,
 				7
@@ -162,7 +167,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async putPassword(req, res) {
@@ -171,23 +176,20 @@ const userController = {
 			const { currentPassword, password } = req.body;
 			const user = await userService.getUserpassword(email);
 
-			console.log('user', user);
-			console.log('currentPassword', currentPassword);
-			console.log('currentPassword', hashPassword(currentPassword));
 			if (user.password !== hashPassword(currentPassword)) {
 				return res
 					.status(400)
-					.json({ message: '비밀번호가 일치하지 않습니다.' });
+					.json({ message: "비밀번호가 일치하지 않습니다." });
 			} else {
 				await userService.updatePasswordFromEmail(email, password);
 
-				res.status(200).json({ message: '비밀번호가 변경되었습니다.' });
+				res.status(200).json({ message: "비밀번호가 변경되었습니다." });
 			}
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async deleteUser(req, res) {
@@ -199,7 +201,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async realDeleteUser(req, res) {
@@ -211,32 +213,31 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async authUser(req, res) {
 		try {
 			const { email, password } = req.body;
 			const user = await userService.getUserFromEmail(email);
-			const userPassword = await User.findOne({ email }, 'password');
+			const userPassword = await User.findOne({ email }, "password");
 
 			if (user === null) {
-				return res.status(400).json({ message: '계정이 존재하지 않습니다.' });
+				return res.status(400).json({ message: "계정이 존재하지 않습니다." });
 			}
 			if (!user.state) {
-				return res.status(400).json({ message: '탈퇴한 계정입니다.' });
+				return res.status(400).json({ message: "탈퇴한 계정입니다." });
 			}
 			if (userPassword.password !== hashPassword(password)) {
-				return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
+				return res.status(400).json({ message: "비밀번호가 틀렸습니다." });
 			}
 
-			console.log('authUser-> user: ', user);
 			res.send(setUserToken(user, 0));
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async createAccessToken(req, res) {
@@ -250,14 +251,14 @@ const userController = {
 			const { email } = req.params;
 			const user = await userService.adminReadSearchUser(email);
 			if (!user) {
-				return res.status(400).json({ message: '해당 유저가 없습니다.' });
+				return res.status(400).json({ message: "해당 유저가 없습니다." });
 			}
 			res.json(user);
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async adminGetUserlist(req, res) {
@@ -269,7 +270,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async adminUpdateUser(req, res) {
@@ -282,7 +283,7 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	async adminDeleteUser(req, res) {
@@ -294,8 +295,14 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
+	},
+	async realDeleteUser(email) {
+		const deleteResult = await User.deleteOne({ email });
+		const deleteFriend = await Friend.deleteOne({ email });
+		console.log(deleteResult, deleteFriend);
+		return { message: "계정이 영구삭제 되었습니다." };
 	},
 	async adminsendEmail(req, res) {
 		try {
@@ -315,37 +322,37 @@ const userController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 userContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
 	//ADMIN 답변 삭제
 	async adminDeleteAnswer(req, res) {
 		try {
-			console.log('adminAnserDelete 실행');
+			console.log("adminAnserDelete 실행");
 			const { answerId } = req.body;
-      const result = await userService.adminDeleteAnswer(answerId);
+			const result = await userService.adminDeleteAnswer(answerId);
 			res.send(result);
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 adminContrller에서 에러가 났습니다.' });
+				.json({ message: "서버의 adminContrller에서 에러가 났습니다." });
 		}
 	},
-		//ADMIN 신고 답변 조회
-		async adminGetComplaint(req, res) {
-			try {
-				console.log('adminGetComplaint 실행');
-				const { answerId } = req.body;
-				const result = await userService.adminDeleteAnswer(answerId);
-				res.send(result);
-			} catch (error) {
-				console.log(error);
-				return res
-					.status(500)
-					.json({ message: '서버의 adminContrller에서 에러가 났습니다.' });
-			}
-		},
+	//ADMIN 신고 답변 조회
+	async adminGetComplaint(req, res) {
+		try {
+			console.log("adminGetComplaint 실행");
+			const { answerId } = req.body;
+			const result = await userService.adminDeleteAnswer(answerId);
+			res.send(result);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 adminContrller에서 에러가 났습니다." });
+		}
+	},
 };
 
 module.exports = userController;
