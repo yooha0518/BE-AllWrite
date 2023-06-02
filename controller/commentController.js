@@ -7,21 +7,10 @@ const CommentController = {
 	async createComment(req, res, next) {
 		try {
 			console.log('댓글 생성!');
-			const answerId = req.params.answerId;
-			const { comment } = req.body;
-			const createdAt = new Date();
-      const reportCount = 0;
-			if(!comment){
-				throw new Error("내용을 작성해주세요.");
-			}
-			const {answer, newComment} = await commentService.createComment(answerId,{
-        comment,
-        reportCount,
-        createdAt 
-      });
-			res
-        .status(201)
-        .json({ message: "댓글이 작성되었습니다.", comment: newComment });
+      const { answerId, nickName } = req.user;
+      const { content } = req.body;
+      const savedComment = await commentService.createComment(answerId, nickName, content);
+      res.status(201).json(savedComment);
 		} catch (error) {
 			console.log(error);
 			return res
@@ -60,7 +49,7 @@ const CommentController = {
       if (!comment) {
         throw new Error("댓글을 찾을 수 없습니다.");
       }
-      res.status(200).json(answer);
+      res.status(200).json(comment);
     } catch (error) {
 			console.log(error);
 			return res
@@ -68,28 +57,26 @@ const CommentController = {
 				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
     }
 	},
+  //댓글 수정
 	async putComment(req, res) {
-		try {
-			console.log('검색 댓글 수정');
-			const answerId = req.params.answerId;
+    try {
       const commentId = req.params.commentId;
-      // req에서 userId랑 내용 가져옴
       const { content } = req.body;
-
-      const comment = await commentService.getAnswer(commentId);
-
-			if (!comment) {
+      const comment = await commentService.getComment(commentId);
+      if (!comment) {
         throw new Error("댓글을 찾을 수 없습니다.");
       }
-			// 해당 id의 게시글에서 내용 수정하고 수정된 게시글 반환 (new: true)
-			const updatedComment = await commentService.updateComment(
-				commentId,
-				{
-					content,
-				},
-				{ new: true }
-			);
-			res.status(200).json(updatedComment);
+      const updatedComment = await commentService.updateComment(
+        commentId,
+        {
+          content,
+        },
+        { new: true }
+      );
+
+      res
+        .status(200)
+        .json({ message: "댓글이 수정되었습니다." });
 		} catch (error) {
 			console.log(error);
 			return res
@@ -106,7 +93,7 @@ const CommentController = {
 		const comment = await commentService.getComment(commentId);
 
 		// 해당 id의 게시글 db에서 삭제
-		const deletedComment = await commentService.deleteAnswer(comment);
+		const deletedComment = await commentService.deleteComment(comment);
 
 		// 삭제
 		res.send(deletedComment);			

@@ -3,16 +3,20 @@ const { Comment, Answer } = require('../models');
 
 const CommentService = {
 	// 댓글 생성
-	async createComment(answerId,{  content, reportCount, createdAt }) {
-		const createComment = await Comment.create(answerId, [{ content, reportCount, createdAt }]);
-    const answer = await Answer.findById(answerId);
-    // answer.comment.push(createComment._id);
-    // await answer.save();
-    
-    return {
-      answer,
-      createComment,
-    };
+	async createComment(answerId, nickName, content) {
+    const newComment = new Comment({
+      answerId,
+      comment: {
+        nickName,
+        content,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        reportCount: 0,
+      },
+    });
+
+    const savedComment = await newComment.save();
+    return savedComment;
 	},
 	// 댓글 조회
 	async getComment(commentId) {
@@ -25,12 +29,17 @@ const CommentService = {
     return comment;
 	},
   //commentId를 사용해 댓글 수정
-  async updateComment(commentId, updateData) {
+  async updateComment(commentId, {content}) {
     const option = { new: true };
-
-    const updateComment = await Comment.findByIdAndUpdate(
-			{_id: commentId}, updateData, option);
-    return updateComment;
+    // const {comment, reportCount} = content;
+    console.log(content)
+    
+    const updatedComment = await Comment.findByIdAndUpdate(
+      commentId,
+      {content,},
+      option
+    );
+    return updatedComment;
   },
 	// 댓글 삭제
 	async deleteComment(commentId) {

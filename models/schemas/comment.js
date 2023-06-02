@@ -5,13 +5,13 @@ const CommentSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'answer',
 		},
-		comment: 
+		comment: [
 			{
 				nickName: {
-					type: Schema.Types.ObjectId,
+					type: String,
 					required: true,
 				},
-        comment: {
+        content: {
 					type: String,
 					required: true,
 				},
@@ -29,6 +29,7 @@ const CommentSchema = new Schema(
 					required: true,
 				},
 			},
+    ],
 	},
 	{ timestamps: true }
 );
