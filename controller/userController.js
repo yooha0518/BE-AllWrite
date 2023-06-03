@@ -93,15 +93,7 @@ const userController = {
 	async putUser(req, res) {
 		try {
 			const { email } = req.user;
-			const { name, nickName, intro, mbti, job, state } = req.body;
-			const result = await userService.updateUser(email, {
-				name,
-				nickName,
-				intro,
-				mbti,
-				job,
-				state,
-			});
+			const result = await userService.updateUser(email, req.body);
 			res.status(200).json({
 				message: "정보가 수정되었습니다.",
 				result: result,
@@ -323,7 +315,7 @@ const userController = {
 		try {
 			console.log("adminsendEmail 실행");
 			const { email } = req.body;
-			const user = await userService.getUserNickname(email);
+			const user = await userService.getUserFromEmail(email);
 			await sendMail(
 				email,
 				`All Write 경고`,

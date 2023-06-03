@@ -49,7 +49,8 @@ const friendController = {
 				return res.status(400).json({ message: "적절한 값을 입력하세요." });
 			}
 
-			const alreadyFriend = await friendService.getOneFriend(friendNickName);
+			const alreadyFriend = await friendService.getFriendCheck(email,friendNickName);
+			console.log("alreadyFriend", alreadyFriend);
 			if (alreadyFriend) {
 				return res
 					.status(400)
