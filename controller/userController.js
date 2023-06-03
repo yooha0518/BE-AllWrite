@@ -72,17 +72,15 @@ const userController = {
 						7
 					);
 					console.log("토큰 만들기 실행");
-					res.send(setAuthCodeToken(authCode));
+					res.send({
+						message: "인증번호가 전송되었습니다.",
+						token: setAuthCodeToken(authCode),
+					});
 				}
 			} else {
 				//일반 정보 조회
 				const { email } = req.user;
 				user = await userService.getUser(email);
-
-				//답변 불러오는 api 사용추가해야함!
-				// const answer = answerService.getTwoAnswer(nickName);
-				//const result = {user, ...answer}
-
 				return res.json(user);
 			}
 		} catch (error) {
@@ -104,7 +102,10 @@ const userController = {
 				job,
 				state,
 			});
-			res.status(200).json(result);
+			res.status(200).json({
+				message: "정보가 수정되었습니다.",
+				result: result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -118,7 +119,10 @@ const userController = {
 			const { email } = req.user;
 			const profileImage = `http://localhost:5000/${req.file.filename}`;
 			const result = await userService.updateProfileImage(email, profileImage);
-			res.send(result);
+			res.status(200).json({
+				message: "이미지가 수정되었습니다.",
+				result: result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -131,7 +135,10 @@ const userController = {
 			const { email } = req.user;
 			const profileImage = `http://localhost:5000/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
-			res.send(result);
+			res.status(200).json({
+				message: "이미지가 삭제되었습니다.",
+				result: result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -204,18 +211,6 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
-	async realDeleteUser(req, res) {
-		try {
-			const email = req.params.email;
-			const user = await userService.realDeleteUser(nickName);
-			res.json(user);
-		} catch (error) {
-			console.log(error);
-			return res
-				.status(500)
-				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
-		}
-	},
 	async authUser(req, res) {
 		try {
 			const { email, password } = req.body;
@@ -232,7 +227,10 @@ const userController = {
 				return res.status(400).json({ message: "비밀번호가 틀렸습니다." });
 			}
 
-			res.send(setUserToken(user, 0));
+			res.status(200).json({
+				message: "토큰이 발급되었습니다.",
+				token: setUserToken(user, 0),
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -244,7 +242,10 @@ const userController = {
 		const { email } = req.user;
 
 		const userForToken = await userService.getUserForToken(email);
-		res.send(setUserToken(userForToken, 1));
+		res.status(200).json({
+			message: "토큰이 발급되었습니다.",
+			token: setUserToken(userForToken, 1),
+		});
 	},
 	async getOneUser(req, res) {
 		try {
@@ -290,7 +291,10 @@ const userController = {
 		try {
 			const { email } = req.params;
 			const result = await userService.deleteUser(email);
-			res.send(result);
+			res.status(200).json({
+				message: `${email}계정이 휴면처리 되었습니다.`,
+				result: result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -298,14 +302,26 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
-	async realDeleteUser(email) {
-		const deleteResult = await User.deleteOne({ email });
-		const deleteFriend = await Friend.deleteOne({ email });
-		console.log(deleteResult, deleteFriend);
-		return { message: "계정이 영구삭제 되었습니다." };
+	async realDeleteUser(req, res) {
+		try {
+			const { email } = req.params;
+			const deleteResult = await User.deleteOne({ email });
+			const deleteFriend = await Friend.deleteOne({ email });
+			console.log(deleteResult, deleteFriend);
+
+			res.status(200).json({
+				message: `${email}계정이 삭제 되었습니다.`,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
 	},
 	async adminsendEmail(req, res) {
 		try {
+			console.log("adminsendEmail 실행");
 			const { email } = req.body;
 			const user = await userService.getUserNickname(email);
 			await sendMail(
