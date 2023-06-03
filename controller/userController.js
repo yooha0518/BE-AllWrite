@@ -315,7 +315,7 @@ const userController = {
 		try {
 			console.log("adminsendEmail 실행");
 			const { email } = req.body;
-			const user = await userService.getUserNickname(email);
+			const user = await userService.getUserFromEmail(email);
 			await sendMail(
 				email,
 				`All Write 경고`,

@@ -50,18 +50,18 @@ const userService = {
 	},
 	// 사용자 정보 수정
 	async updateUser(email, body) {
-		const { nickName, name, intro, mbti, job, state, dream } = body;
+		const { name, intro, mbti, job, state, dream } = body;
 		//성공여부, 조건에 맞는 문서의 수, 새로 생성된 문서의 수, 새로 생성된 문서의 id값이 들어있음
 		const result = await User.updateOne(
 			{ email },
 			{
 				name,
-				nickName,
 				intro,
 				mbti,
 				job,
 				dream,
 				state,
+				intro,
 			}
 		);
 		if (result.modifiedCount === 0) {
@@ -107,13 +107,12 @@ const userService = {
 	},
 	// 사용자 삭제 (회원탈퇴)
 	async deleteUser(email) {
-		await User.updateOne({ email }, { $set: { state: false } });
-		return { message: "계정이 탈퇴 되었습니다." };
+		const result = await User.updateOne({ email }, { $set: { state: false } });
+		return result;
 	},
 	async realDeleteUser(email) {
 		const deleteResult = await User.deleteOne({ email });
-		console.log(deleteResult);
-		return { message: "계정이 영구삭제 되었습니다." };
+		return deleteResult;
 	},
 
 	//특정 사용자 조회
