@@ -26,6 +26,17 @@ const friendService = {
 			}
 		}
 	},
+	//친구 여부 확인
+	async getFriendCheck(email, friendNickName) {
+		const userFriend = await Friend.findOne({ email }, "friends");
+
+		for (const item of userFriend.friends) {
+			if (friendNickName === item.friendNickName) {
+				return true;
+			}
+		}
+		return false;
+	},
 	// 친구 닉네임으로 요청 보내기
 	async createFriendReq(email, friendNickName) {
 		const user = await User.findOne({ email });
@@ -108,12 +119,12 @@ const friendService = {
 	// 	return { message: '계정이 영구삭제 되었습니다.' };
 	// },
 
-	//특정 친구 조회
-	async getOneFriend(nickName) {
-		const friend = await Friend.findOne({ nickName });
-		console.log(friend);
-		return friend;
-	},
+	// //친구 조회
+	// async getOneFriend(nickName) {
+	// 	const friend = await Friend.findOne({ nickName });
+	// 	console.log(friend);
+	// 	return friend;
+	// },
 };
 
 module.exports = friendService;

@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema } = require("mongoose");
 const UserSchema = new Schema(
 	{
 		nickName: {
@@ -30,9 +30,13 @@ const UserSchema = new Schema(
 			type: String,
 			default: null,
 		},
+		dream: {
+			type: String,
+			default: null,
+		},
 		profileImage: {
 			type: String,
-			default: 'http://localhost:5000/defaultImage.png',
+			default: "http://localhost:5000/defaultImage.png",
 		},
 		experience: {
 			type: Number,

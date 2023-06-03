@@ -93,15 +93,7 @@ const userController = {
 	async putUser(req, res) {
 		try {
 			const { email } = req.user;
-			const { name, nickName, intro, mbti, job, state } = req.body;
-			const result = await userService.updateUser(email, {
-				name,
-				nickName,
-				intro,
-				mbti,
-				job,
-				state,
-			});
+			const result = await userService.updateUser(email, req.body);
 			res.status(200).json({
 				message: "정보가 수정되었습니다.",
 				result: result,
