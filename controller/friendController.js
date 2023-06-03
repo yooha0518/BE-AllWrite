@@ -5,7 +5,7 @@ const friendController = {
 	async getfriendtable(req, res) {
 		try {
 			const { email } = req.user;
-			const friendTable = await friendService.getFriend(email);
+			const friendTable = await friendService.getFriendTable(email);
 
 			return res.status(200).json(friendTable);
 		} catch (error) {
@@ -42,17 +42,33 @@ const friendController = {
 	//친구 요청 보내기
 	async sendFriend(req, res) {
 		try {
-			const { email } = req.user;
+			const { email, nickName } = req.user;
 			const { friendNickName } = req.body;
 
-			const alreadyRequest = await friendService.getRequest(friendNickName);
+			if (nickName === friendNickName) {
+				return res.status(400).json({ message: "적절한 값을 입력하세요." });
+			}
 
+			const alreadyFriend = await friendService.getOneFriend(friendNickName);
+			if (alreadyFriend) {
+				return res
+					.status(400)
+					.json({ message: `${friendNickName}님과는 이미 친구인 상태입니다.` });
+			}
+
+			const alreadyRequest = await friendService.getRequest(
+				email,
+				friendNickName
+			);
 			if (alreadyRequest) {
 				return res.status(400).json({ message: "이미 요청한 유저입니다." });
 			}
 
-			const alreadyresponse = await friendService.getResponse(friendNickName);
-			if (alreadyresponse) {
+			const alreadyRequested = await friendService.getResponse(
+				email,
+				friendNickName
+			);
+			if (alreadyRequested) {
 				return res
 					.status(400)
 					.json({ message: "이미 요청을 받은 유저입니다." });
@@ -78,6 +94,10 @@ const friendController = {
 	//친구 요청 수락
 	async acceptFriend(req, res) {
 		try {
+			const { email } = req.user;
+			const { friendNickName } = req.body;
+			const result = await friendService.acceptFriend(email, friendNickName);
+			return res.status(200).json(result);
 		} catch (error) {
 			console.log(error);
 			return res
