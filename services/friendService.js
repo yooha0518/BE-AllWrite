@@ -108,23 +108,28 @@ const friendService = {
 		return friend;
 	},
 	// 친구 전체 조회
-	async getAllFriend(email) {
-		const friend = await Friend.findOne({ email }, "friends");
+	async getAllFriend(nickName) {
+		const friend = await Friend.findOne({ nickName }, "friends");
+
 		return friend.friends;
 	},
 
-	// // 친구 삭제
-	// async DeleteFriend(email) {
-	// 	const deleteResult = await Friend.deleteOne({ email });
-	// 	return { message: '계정이 영구삭제 되었습니다.' };
-	// },
-
-	// //친구 조회
-	// async getOneFriend(nickName) {
-	// 	const friend = await Friend.findOne({ nickName });
-	// 	console.log(friend);
-	// 	return friend;
-	// },
+	// 친구 삭제
+	async deleteFriend(email, nickName, friendEmail, friendNickName) {
+		const result1 = await Friend.updateOne(
+			{ email },
+			{
+				$pull: { friends: { friendNickName: friendNickName } },
+			}
+		);
+		const result2 = await Friend.updateOne(
+			{ friendEmail },
+			{
+				$pull: { friends: { friendNickName: nickName } },
+			}
+		);
+		return { result1, result2 };
+	},
 };
 
 module.exports = friendService;
