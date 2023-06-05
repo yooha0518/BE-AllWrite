@@ -3,10 +3,26 @@ const { Answer } = require('../models');
 
 const AnswerService = {
 	// 답변 생성
-	async createAnswer({  content,reportCount,stateCode,  createdAt }) {
-		const createdAnswer = await Answer.create({ content,reportCount,stateCode,  createdAt });
-		return createdAnswer;
+	// async createAnswer(nickName,{  content,reportCount,stateCode,  createdAt }) {
+	// 	const createdAnswer = await Answer.create(,{ content,reportCount,stateCode,  createdAt });
+	// 	return createdAnswer;
+	// },
+	async createAnswer( {nickName,  content,reportCount,stateCode,  createdAt }) {
+    const newAnswer = new Answer({
+        nickName,
+        content,
+				stateCode,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        reportCount: 0,
+      
+    });
+
+    const savedAsnwer = await newAnswer.save();
+    return savedAsnwer;
 	},
+
+
 	// 답변 조회
 	async getAnswer(answerId) {
 		const answer = await Answer.findOne( {_id: answerId} );
