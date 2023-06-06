@@ -241,8 +241,8 @@ const userController = {
 	},
 	async getOneUser(req, res) {
 		try {
-			const { email } = req.params;
-			const user = await userService.adminReadSearchUser(email);
+			const { nickName } = req.params;
+			const user = await userService.SearchUser(nickName);
 			if (!user) {
 				return res.status(400).json({ message: "해당 유저가 없습니다." });
 			}

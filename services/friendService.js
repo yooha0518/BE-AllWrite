@@ -109,7 +109,7 @@ const friendService = {
 	},
 	// 친구 전체 조회
 	async getAllFriend(nickName) {
-		const friend = await Friend.findOne({ nickName }, "friends");
+		const friend = await Friend.findOne({ nickName });
 
 		return friend.friends;
 	},

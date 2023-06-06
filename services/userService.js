@@ -81,6 +81,18 @@ const userService = {
 			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
 		};
 	},
+	async getPasswordFromEmail(email, tempPassword) {
+		const result = await User.updateOne(
+			{ email },
+			{
+				password: hashPassword(tempPassword),
+				isTempPassword: true,
+			}
+		);
+		return {
+			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
+		};
+	},
 	async updatePasswordFromEmail(email, tempPassword) {
 		const result = await User.updateOne(
 			{ email },
@@ -116,8 +128,8 @@ const userService = {
 	},
 
 	//특정 사용자 조회
-	async adminReadSearchUser(email) {
-		const user = await User.findOne({ email });
+	async SearchUser(nickName) {
+		const user = await User.findOne({ nickName });
 		return user;
 	},
 	//관리자 - 사용자 전체 정보 조회
