@@ -2,6 +2,18 @@ const { Friend } = require("../models");
 const { User } = require("../models");
 
 const friendService = {
+	// 친구 전체 조회
+	async getAllFriend(email) {
+		const friendtable = await Friend.findOne({ email });
+		const friends = friendtable.friends;
+		function resultList(arr) {
+			return arr.map((item) => {
+				const { nickName, profileImage } = item.friend;
+				return { nickName, profileImage };
+			});
+		}
+		return resultList(friends);
+	},
 	// 친구 테이블 생성
 	async createFriend(email) {
 		const createdFriend = await Friend.create({ email });
@@ -74,6 +86,7 @@ const friendService = {
 	async acceptFriend(email, friendNickName) {
 		const user = await User.findOne({ email });
 		const friend = await User.findOne({ nickName: friendNickName });
+		console.log("frind_email: ", friend.email);
 
 		const userResult1 = await Friend.updateOne(
 			{ email },
@@ -84,7 +97,7 @@ const friendService = {
 		const userResult2 = await Friend.updateOne(
 			{ email },
 			{
-				$push: { friends: { friendNickName } },
+				$push: { friends: friend },
 			}
 		);
 		const friendResult1 = await Friend.updateOne(
@@ -96,7 +109,7 @@ const friendService = {
 		const friendResult2 = await Friend.updateOne(
 			{ email: friend.email },
 			{
-				$push: { friends: { friendNickName: user.nickName } },
+				$push: { friends: { friend: user } },
 			}
 		);
 
@@ -106,12 +119,6 @@ const friendService = {
 	async getFriendTable(email) {
 		const friend = await Friend.findOne({ email });
 		return friend;
-	},
-	// 친구 전체 조회
-	async getAllFriend(nickName) {
-		const friend = await Friend.findOne({ nickName });
-
-		return friend.friends;
 	},
 
 	// 친구 삭제

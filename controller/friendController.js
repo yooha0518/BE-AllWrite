@@ -76,7 +76,7 @@ const friendController = {
 
 			return res
 				.status(200)
-				.json({ message: "친구 요청을 보냈습니다. ", result });
+				.json({ message: `${friendNickName}님께 친구 요청을 보냈습니다. `, result });
 		} catch (error) {
 			console.log(error);
 			return res

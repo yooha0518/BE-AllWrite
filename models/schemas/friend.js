@@ -5,14 +5,7 @@ const FriendSchema = new Schema(
 			type: String,
 			unique: true,
 		},
-		friends: [
-			{
-				friendNickName: {
-					type: String,
-					default: null,
-				},
-			},
-		],
+		friends: [],
 		req_friends: [
 			{
 				friendNickName: {
