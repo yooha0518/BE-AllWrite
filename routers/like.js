@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const likeService = require('../controller/likeController');
+const likeController = require('../controller/likeController');
 
 // POST /like
 router.post('/like', likeController.createLike);
