@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema } = require("mongoose");
 const FriendSchema = new Schema(
 	{
 		email: {
@@ -12,6 +12,10 @@ const FriendSchema = new Schema(
 					type: String,
 					default: null,
 				},
+				friendProfileImage: {
+					type: String,
+					default: "http://allwrite.kro.kr:5000/defaultImage.png",
+				},
 			},
 		],
 		res_friends: [
@@ -19,6 +23,10 @@ const FriendSchema = new Schema(
 				friendNickName: {
 					type: String,
 					default: null,
+				},
+				friendProfileImage: {
+					type: String,
+					default: "http://allwrite.kro.kr:5000/defaultImage.png",
 				},
 			},
 		],
