@@ -1,35 +1,42 @@
-const { Question } = require('../models');
+const { Question } = require("../models");
 
+let today = Date.now;
 
-const QuestionService = {
-	// 질문 생성
-	async createQuestion({ content }) {
-		const createdQuestion = await Question.create({ content });
-		return createdQuestion;
+const questionService = {
+	//질문 전체 조회
+	async getAllQuestion() {
+		const allQuestion = await Question.find({});
+		return allQuestion;
 	},
-	// 질문 조회
-	async getQuestion(QuestionId) {
-		const question = await Question.findOne({ QuestionId });
+	//오늘의 질문 5개 조회
+	async getTodayQuestion() {
+		const question = await Question.findOne({ date: today });
+		if (!question) {
+			const todayQuestion = await Question.findOneAndUpdate({ date: null },)
+
+		}
 		return question;
 	},
-	
-	// 질문 수정
-	async updateQuestion(QuestionId, content) {
-		const result = await Question.updateOne(QuestionId ,	content);
-		if (result.modifiedCount === 0) {
-			console.log('변경사항이 없습니다.');
-		}
-		console.log(result);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+	//질문 생성
+	async createQuestion(content) {
+		const result = await Question.create({ content });
+		return result;
 	},
-	// 질문 삭제
-	async deleteQuestion(QuestionId) {
-		const deleteResult = await Question.deleteOne({ QuestionId });
-		console.log(deleteResult);
-		return { message: '질문이 삭제 되었습니다.' };
+	//질문 수정
+	async updateQuestion(questionId, content) {
+		const updateResult = await Question.updateOne(
+			{ _id: questionId },
+			{
+				content,
+			}
+		);
+		return updateResult;
+	},
+	//질문 삭제
+	async deleteQuestion(questionId) {
+		const deleteResult = await Question.deleteOne({ _id: questionId });
+		return deleteResult;
 	},
 };
 
-module.exports = QuestionService;
+module.exports = questionService;

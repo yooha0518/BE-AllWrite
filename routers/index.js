@@ -5,6 +5,7 @@ const authRouter = require("./auth");
 const answerRouter = require("./answer");
 const adminUserRouter = require("./adminUser");
 const friendRouter = require("./friend.js");
+const questionRouter = require("./question.js");
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
 
 router.get("/", (req, res) => {
@@ -16,4 +17,5 @@ router.use("/auth", authRouter);
 router.use("/adminUser", adminUserRouter);
 router.use("/friend", friendRouter);
 router.use("/answer", answerRouter);
+router.use("/question", questionRouter);
 module.exports = router;
