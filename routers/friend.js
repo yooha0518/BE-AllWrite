@@ -18,10 +18,13 @@ friendRouter.post("/response", getUserFromJwt, friendController.acceptFriend);
 //받은 친구요청 조회
 friendRouter.get("/request", getUserFromJwt, friendController.getReqfriend);
 
+// //받은 친구요청 거절
+// friendRouter.get("/request", getUserFromJwt, friendController.deleteReqfriend);
+
 //보낸 친구요청 조회
 friendRouter.get("/requested", getUserFromJwt, friendController.sendReqfriend);
 
 //친구 삭제
-friendRouter.delete("/:friendEmail", getUserFromJwt, friendController.deleteFriend);
+friendRouter.delete("/:friendNickName", getUserFromJwt, friendController.deleteFriend);
 
 module.exports = friendRouter;
