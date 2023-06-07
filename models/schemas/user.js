@@ -36,7 +36,7 @@ const UserSchema = new Schema(
 		},
 		profileImage: {
 			type: String,
-			default: "http://localhost:5000/defaultImage.png",
+			default: "http://allwrite.kro.kr:5000/defaultImage.png",
 		},
 		experience: {
 			type: Number,
