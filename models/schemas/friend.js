@@ -6,30 +6,8 @@ const FriendSchema = new Schema(
 			unique: true,
 				},
 		friends: [],
-		req_friends: [
-			{
-				friendNickName: {
-					type: String,
-					default: null,
-				},
-				friendProfileImage: {
-					type: String,
-					default: "http://allwrite.kro.kr:5000/defaultImage.png",
-				},
-			},
-		],
-		res_friends: [
-			{
-				friendNickName: {
-					type: String,
-					default: null,
-				},
-				friendProfileImage: {
-					type: String,
-					default: "http://allwrite.kro.kr:5000/defaultImage.png",
-				},
-			},
-		],
+		req_friends: [],
+		res_friends: [],
 	},
 	{ timestamps: false }
 );

@@ -6,14 +6,17 @@ const friendService = {
 	async getAllFriend(email) {
 		const friendtable = await Friend.findOne({ email });
 		const friends = friendtable.friends;
-		function resultList(arr) {
-			return arr.map((item) => {
-				const { nickName, profileImage } = item.friend;
-				return { friendNickName: nickName, friendProfileImage: profileImage };
-			});
+		const friendArr = [];
+		for (let i = 0; i < friends.length; i++) {
+			friendArr.push(
+				await User.findOne(
+					{ nickName: friends[i].nickName },
+					{ profileImage: 1, nickName: 1 }
+				)
+			);
+			console.log(`friendArr`, friendArr);
 		}
-		return resultList(friends);
-		// return friends;
+		return friendArr;
 	},
 	// 친구 테이블 생성
 	async createFriend(email) {
@@ -59,18 +62,20 @@ const friendService = {
 		console.log("user: ", user);
 		const myNickName = user.nickName;
 		console.log("myNickName", myNickName);
+
 		const userResult = await Friend.updateOne(
 			{ email },
 			{
 				$push: {
-					req_friends: { friendNickName, friendProfileImage },
+					req_friends: { nickName: friendNickName },
 				},
 			}
 		);
+
 		const friendResult = await Friend.updateOne(
 			{ email: friend.email },
 			{
-				$push: { res_friends: { friendNickName: myNickName } },
+				$push: { res_friends: { nickName: myNickName } },
 			}
 		);
 
@@ -79,42 +84,84 @@ const friendService = {
 	// 받은 친구 요청 조회
 	async getFriendReq(email) {
 		const result = await Friend.findOne({ email }, "res_friends");
-		console.log(result);
-		return result.res_friends;
+		const resFriends = result.res_friends;
+		const friendArr = [];
+		for (let i = 0; i < resFriends.length; i++) {
+			friendArr.push(
+				await User.findOne(
+					{ nickName: resFriends[i].nickName },
+					{ profileImage: 1, nickName: 1 }
+				)
+			);
+			console.log(`friendArr`, friendArr);
+		}
+		return friendArr;
 	},
 	//보낸 요청 조회
 	async getFriendSendReq(email) {
 		const result = await Friend.findOne({ email }, "req_friends");
-		return result.req_friends;
+		const reqFriends = result.req_friends;
+		const friendArr = [];
+		for (let i = 0; i < reqFriends.length; i++) {
+			friendArr.push(
+				await User.findOne(
+					{ nickName: reqFriends[i].nickName },
+					{ profileImage: 1, nickName: 1 }
+				)
+			);
+			console.log(`friendArr`, friendArr);
+		}
+		return friendArr;
+	},
+	//특정 유저에게 받은 요청 조회
+	async findReq(email, friendNickName) {
+		const resFriendsTable = await Friend.findOne({ email }, "res_friends");
+		const resFriends = resFriendsTable.res_friends;
+		console.log("resFriendsTable", resFriendsTable);
+		console.log("resFriends", resFriends);
+		let result = 0;
+		if (!resFriends) {
+			return result;
+		}
+		for (let i = 0; i < resFriends.length; i++) {
+			if (resFriends[i].nickName === friendNickName) {
+				result = 1;
+				console.log("result:", result);
+			}
+		}
+		return result;
 	},
 	// 친구 요청 수락
 	async acceptFriend(email, friendNickName) {
 		const user = await User.findOne({ email });
 		const friend = await User.findOne({ nickName: friendNickName });
-		console.log("frind_email: ", friend.email);
 
+		console.log("friend", friend);
+		//적용 안됨
 		const userResult1 = await Friend.updateOne(
 			{ email },
 			{
-				$pull: { res_friends: { friendNickName } },
+				$pull: { res_friends: { nickName: friendNickName } },
 			}
 		);
 		const userResult2 = await Friend.updateOne(
 			{ email },
 			{
-				$push: { friends: friend },
+				$push: { friends: { nickName: friend.nickName } },
 			}
 		);
+
+		//적용 안됨
 		const friendResult1 = await Friend.updateOne(
 			{ email: friend.email },
 			{
-				$pull: { req_friends: { friendNickName: user.nickName } },
+				$pull: { req_friends: { nickName: user.nickName } },
 			}
 		);
 		const friendResult2 = await Friend.updateOne(
 			{ email: friend.email },
 			{
-				$push: { friends: { friend: user } },
+				$push: { friends: { nickName: user.nickName } },
 			}
 		);
 
