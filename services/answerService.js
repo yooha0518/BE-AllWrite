@@ -33,6 +33,19 @@ const AnswerService = {
     const answer = await Answer.find({});
     return answer;
 	},
+
+	// 전체 공개 게시글을 조회하는 함수
+	async getPublicAnswers() {
+			const answers = await Answer.find({ stateCode: true }).populate('nickName'); // stateCode가 true인 글을 조회하고, 작성자 정보를 가져옵니다.
+			return answers;
+	},
+
+	// 친구 공개 게시글을 조회하는 함수
+	async  getFriendAnswers() {
+			const answers = await Answer.find({ stateCode: false }).populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
+			return answers;
+},
+
   //answerId를 사용해 답변 수정
   async updateAnswer(answerId, updateData) {
     const option = { new: true };

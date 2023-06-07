@@ -63,6 +63,25 @@ const AnswerController = {
     }
 	},
 
+	async getPublicAnswers(req, res) {
+		try {
+			const answers = await answerService.getPublicAnswers(); // 전체 공개 게시글을 서비스에서 조회합니다.
+			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+		} catch (error) {
+			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+		}
+	},
+	
+	// 친구 공개 게시글을 조회하는 컨트롤러 함수
+	async getFriendAnswers(req, res) {
+		try {
+			const answers = await answerService.getFriendAnswers(); // 친구 공개 게시글을 서비스에서 조회합니다.
+			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+		} catch (error) {
+			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+		}
+	},
+
 	//답변 조회
 	async getAnswer(req, res) {
 		try {
