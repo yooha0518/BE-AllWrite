@@ -1,5 +1,5 @@
-const { User } = require('../models');
-const hashPassword = require('../utils/hash-password');
+const { User } = require("../models");
+const hashPassword = require("../utils/hash-password");
 
 const userService = {
 	// 사용자 생성 (회원가입)
@@ -19,11 +19,11 @@ const userService = {
 		return user;
 	},
 	async getUserpassword(email) {
-		const user = await User.findOne({ email }, 'password');
+		const user = await User.findOne({ email }, "password");
 		return user;
 	},
-	async getUserNickname(email) {
-		const user = await User.findOne({ email }, 'nickName');
+	async getUserFromNickName(nickName) {
+		const user = await User.findOne({ nickName });
 		return user;
 	},
 	async getUserFromEmail(email) {
@@ -45,37 +45,48 @@ const userService = {
 		return user;
 	},
 	async getUserRefreshToken(email) {
-		const user = await User.findOne({ email }, 'refreshToken');
+		const user = await User.findOne({ email }, "refreshToken");
 		return user;
 	},
 	// 사용자 정보 수정
-	async updateUser(email, user) {
-		const { nickName, name, intro, mbti, job, state } = user;
+	async updateUser(email, body) {
+		const { name, intro, mbti, job, state, dream } = body;
 		//성공여부, 조건에 맞는 문서의 수, 새로 생성된 문서의 수, 새로 생성된 문서의 id값이 들어있음
 		const result = await User.updateOne(
 			{ email },
 			{
 				name,
-				nickName,
 				intro,
 				mbti,
 				job,
+				dream,
 				state,
+				intro,
 			}
 		);
 		if (result.modifiedCount === 0) {
-			console.log('변경사항이 없습니다.');
+			console.log("변경사항이 없습니다.");
 		}
 		console.log(result);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
 	},
 	async updateProfileImage(email, profileImage) {
 		const result = await User.updateOne(
 			{ email },
 			{
 				profileImage,
+			}
+		);
+		return {
+			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
+		};
+	},
+	async getPasswordFromEmail(email, tempPassword) {
+		const result = await User.updateOne(
+			{ email },
+			{
+				password: hashPassword(tempPassword),
+				isTempPassword: true,
 			}
 		);
 		return {
@@ -108,18 +119,17 @@ const userService = {
 	},
 	// 사용자 삭제 (회원탈퇴)
 	async deleteUser(email) {
-		await User.updateOne({ email }, { $set: { state: false } });
-		return { message: '계정이 탈퇴 되었습니다.' };
+		const result = await User.updateOne({ email }, { $set: { state: false } });
+		return result;
 	},
 	async realDeleteUser(email) {
 		const deleteResult = await User.deleteOne({ email });
-		console.log(deleteResult);
-		return { message: '계정이 영구삭제 되었습니다.' };
+		return deleteResult;
 	},
 
 	//특정 사용자 조회
-	async adminReadSearchUser(email) {
-		const user = await User.findOne({ email });
+	async SearchUser(nickName) {
+		const user = await User.findOne({ nickName });
 		return user;
 	},
 	
