@@ -6,6 +6,7 @@ const answerRouter = require("./answer");
 const commentRouter = require("./comment");
 const likeRouter = require("./like");
 const adminUserRouter = require("./adminUser");
+const friendRouter = require("./friend.js");
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
 
 router.get("/", (req, res) => {
