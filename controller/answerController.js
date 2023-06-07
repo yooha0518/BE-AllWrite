@@ -9,7 +9,7 @@ const AnswerController = {
 			console.log('답변 만들기!');
 			const {nickName} = req.user;
 			const { content, stateCode, reportCount } = req.body;
-			// console.log(nickName);
+			console.log(nickName);
 			// const userId = req.currentUserId;
 			const createdAt = new Date();
 			if(!content){

@@ -42,7 +42,8 @@ const AnswerService = {
 
 	// 친구 공개 게시글을 조회하는 함수
 	async  getFriendAnswers() {
-			const answers = await Answer.find({ stateCode: false }).populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
+			const answers = await Answer.find({ stateCode: false })
+			// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
 			return answers;
 },
 
@@ -52,13 +53,13 @@ const AnswerService = {
 
     const updateAnswer = await Answer.updateOne(
 			{_id: answerId}, updateData, option);
-    return updateAnswer;
+    return {message: '답변이 수정 되었습니다.', answer:updateAnswer };
   },
 	// 질문 삭제
 	async deleteAnswer(answerId) {
 		const deleteResult = await Answer.deleteOne({_id: answerId});
 		console.log(deleteResult);
-		return {message: '질문이 삭제 되었습니다.', answer:deleteResult };
+		return {message: '답변이 삭제 되었습니다.', answer:deleteResult };
 	},
 };
 
