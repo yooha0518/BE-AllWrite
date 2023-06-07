@@ -9,10 +9,11 @@ const friendService = {
 		function resultList(arr) {
 			return arr.map((item) => {
 				const { nickName, profileImage } = item.friend;
-				return { nickName, profileImage };
+				return { friendNickName: nickName, profileImage };
 			});
 		}
 		return resultList(friends);
+		// return friends;
 	},
 	// 친구 테이블 생성
 	async createFriend(email) {
@@ -53,13 +54,17 @@ const friendService = {
 	async createFriendReq(email, friendNickName) {
 		const user = await User.findOne({ email });
 		const friend = await User.findOne({ nickName: friendNickName });
+		const friendProfileImage = friend.profileImage;
+		console.log("friendProfileImage", friendProfileImage);
 		console.log("user: ", user);
 		const myNickName = user.nickName;
 		console.log("myNickName", myNickName);
 		const userResult = await Friend.updateOne(
 			{ email },
 			{
-				$push: { req_friends: { friendNickName } },
+				$push: {
+					req_friends: { friendNickName, friendProfileImage },
+				},
 			}
 		);
 		const friendResult = await Friend.updateOne(
