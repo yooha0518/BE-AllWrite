@@ -4,6 +4,7 @@ const userRouter = require("./user");
 const authRouter = require("./auth");
 const answerRouter = require("./answer");
 const commentRouter = require("./comment");
+const likeRouter = require("./like");
 const adminUserRouter = require("./adminUser");
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
 
@@ -16,4 +17,5 @@ router.use("/auth", authRouter);
 router.use("/adminUser", getUserFromJwt, adminUserRouter);
 router.use("/answer", answerRouter);
 router.use("/answer/:answerId/comment", commentRouter);
+router.use("/answer/:answerId/like", likeRouter);
 module.exports = router;
