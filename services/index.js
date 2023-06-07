@@ -4,6 +4,7 @@ const answerService = require("./answerService");
 const commentService = require("./commentService");
 const adminService = require("./adminService");
 const likeService = require("./likeService");
+const friendService = require("./friendService");
 module.exports = {
   userService,
   questionService,
@@ -11,4 +12,5 @@ module.exports = {
   commentService,
   adminService,
   likeService,
+  friendService,
 };
