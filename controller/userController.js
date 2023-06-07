@@ -109,7 +109,7 @@ const userController = {
 		try {
 			console.log("프로필사진 수정 시작");
 			const { email } = req.user;
-			const profileImage = `http://localhost:5000/${req.file.filename}`;
+			const profileImage = `http://allwrite.kro.kr:5000/${req.file.filename}`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 수정되었습니다.",
@@ -125,7 +125,7 @@ const userController = {
 	async deleteProfileImate(req, res) {
 		try {
 			const { email } = req.user;
-			const profileImage = `http://localhost:5000/defaultImage.png`;
+			const profileImage = `http://allwrite.kro.kr:5000/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 삭제되었습니다.",
