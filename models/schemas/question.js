@@ -1,26 +1,17 @@
-const { Schema } = require('mongoose');
+const { Schema } = require("mongoose");
 const QuestionSchema = new Schema(
 	{
-    //answerId = answer참조
-		answerId: {
-			type: Schema.Types.ObjectId,
-			ref: 'answer',
+		answerId: [],
+		content: {
+			type: String,
+			required: true,
 		},
-		content:	{
-        type: String,
-        required: true,
-			},
-      createdAt: {
-        type: Date,
-        default: Date.now,
-        required: true,
-      },
-      updatedAt: {
-        type: Date,
-        default: Date.now,
-      },
+		date: {
+			type: String,
+			default: null,
+		},
 	},
-	{ timestamps: true }
+	{ timestamps: false }
 );
 
 module.exports = QuestionSchema;
