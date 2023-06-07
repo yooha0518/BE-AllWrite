@@ -107,7 +107,6 @@ const userController = {
 	},
 	async putProfileImage(req, res) {
 		try {
-			console.log("프로필사진 수정 시작");
 			const { email } = req.user;
 			const profileImage = `http://allwrite.kro.kr:5000/${req.file.filename}`;
 			const result = await userService.updateProfileImage(email, profileImage);
@@ -220,7 +219,7 @@ const userController = {
 			}
 
 			res.status(200).json({
-				message: "토큰이 발급되었습니다.",
+				message: "로그인 되었습니다.",
 				token: setUserToken(user, 0),
 			});
 		} catch (error) {
