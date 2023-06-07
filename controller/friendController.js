@@ -74,9 +74,10 @@ const friendController = {
 
 			const result = await friendService.createFriendReq(email, friendNickName);
 
-			return res
-				.status(200)
-				.json({ message: `${friendNickName}님께 친구 요청을 보냈습니다. `, result });
+			return res.status(200).json({
+				message: `${friendNickName}님께 친구 요청을 보냈습니다. `,
+				result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -89,6 +90,13 @@ const friendController = {
 		try {
 			const { email } = req.user;
 			const { friendNickName } = req.body;
+
+			const request = await friendService.findReq(email, friendNickName);
+			if (!request) {
+				return res
+					.status(400)
+					.json({ message: "해당 유저는 요청을 보내지 않았습니다." });
+			}
 			const result = await friendService.acceptFriend(email, friendNickName);
 			return res.status(200).json({
 				message: `${friendNickName}님과 친구가 되었습니다.`,
