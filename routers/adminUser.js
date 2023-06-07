@@ -16,17 +16,14 @@ adminUserRouter.put('/profileImage/:email',getUserFromJwt, authAdmin, userContro
 //ADNIM 유저 정보 수정
 adminUserRouter.put('/:email',getUserFromJwt, authAdmin, userController.adminUpdateUser);
 
-//ADNIM 유저 휴면 전환
+//ADNIM 유저 정보 삭제
 adminUserRouter.delete('/:email', getUserFromJwt, authAdmin, userController.adminDeleteUser);
 
-//ADNIM 유저 정보 진짜 삭제
-adminUserRouter.delete('/delete/:email', userController.adminDeleteUser);
+// //ADMIN 답변 전체 조회
+// adminUserRouter.get('/:answerId', getUserFromJwt, authAdmin, userController.adminGetAnswer);
 
-//ADMIN 답변 전체 조회
-adminUserRouter.get('/:answerId', getUserFromJwt, authAdmin, userController.adminDeleteAnswer);
-
-//ADMIN 신고된 답변 조회
-adminUserRouter.get("/complaint", getUserFromJwt, authAdmin, userController.adminGetComplaint);
+// //ADMIN 신고된 답변 조회
+// adminUserRouter.get("/complaint", getUserFromJwt, authAdmin, userController.adminGetComplaint);
 
 
 module.exports = adminUserRouter;

@@ -7,15 +7,17 @@ const AnswerController = {
 	async createAnswer(req, res, next) {
 		try {
 			console.log('답변 만들기!');
-			const { content } = req.body;
+			const {nickName} = req.user;
+			const { content, stateCode, reportCount } = req.body;
+			console.log(nickName);
 			// const userId = req.currentUserId;
 			const createdAt = new Date();
 			if(!content){
 				throw new Error("내용을 작성해주세요.");
 			}
-			const reportCount = 0;
-			const stateCode = 1;
-			const answer = await answerService.createAnswer({	content,reportCount,stateCode,  createdAt });
+			// const reportCount = 0;
+			// const stateCode = 1;
+			const answer = await answerService.createAnswer({ nickName, content,reportCount,stateCode,  createdAt });
 			res
         .status(201)
         .json({ message: "답변이 작성되었습니다.", answer: answer });
@@ -26,6 +28,26 @@ const AnswerController = {
 				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
 		}
 	},
+
+
+	//answer post api test
+	// async createAnswer(req, res, next) {
+	// 	try {
+	// 		console.log('답변 생성!');
+  //     const { nickName } = req.user;
+  //     const { content } = req.body;
+	// 		console.log(nickName, content);
+  //     const savedAnswer = await answerService.createAnswer( nickName, content);
+  //     res.status(201).json(savedAnswer);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		return res
+	// 			.status(500)
+	// 			.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
+	// 	}
+	// },
+
+
   //전체 답변 조회
 	async getAnswerAll(req, res) {
 		try {
@@ -39,6 +61,25 @@ const AnswerController = {
 				.status(500)
 				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
     }
+	},
+
+	async getPublicAnswers(req, res) {
+		try {
+			const answers = await answerService.getPublicAnswers(); // 전체 공개 게시글을 서비스에서 조회합니다.
+			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+		} catch (error) {
+			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+		}
+	},
+	
+	// 친구 공개 게시글을 조회하는 컨트롤러 함수
+	async getFriendAnswers(req, res) {
+		try {
+			const answers = await answerService.getFriendAnswers(); // 친구 공개 게시글을 서비스에서 조회합니다.
+			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+		} catch (error) {
+			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+		}
 	},
 
 	//답변 조회
