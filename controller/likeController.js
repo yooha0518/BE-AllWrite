@@ -1,11 +1,11 @@
-const Like = require('../models/Like');
+const likeService = require('../services/likeService');
 
 // POST /like
 exports.createLike = async (req, res) => {
   try {
     const { answerId, nickName } = req.body;
 
-    const like = await Like.findOne({ answerId });
+    const like = await likeService.findOne({ answerId });
 
     if (!like) {
       // If no like exists for the answerId, create a new like
@@ -35,7 +35,7 @@ exports.deleteLike = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const like = await Like.findById(id);
+    const like = await likeService.findById(id);
 
     if (!like) {
       return res.status(404).json({ error: 'Like not found' });
