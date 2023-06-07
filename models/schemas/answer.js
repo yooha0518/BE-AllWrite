@@ -1,15 +1,9 @@
 const { Schema } = require('mongoose');
 const AnswerSchema = new Schema(
 	{
-    //작성자 참조
     nickName: {
-			type: Schema.Types.ObjectId,
+			type: String,
 			ref: 'user',
-		},
-    //answerId = answer참조
-		questionId: {
-			type: Schema.Types.ObjectId,
-			ref: 'question',
 		},
 		content:	{
         type: String,

@@ -44,7 +44,7 @@ userRouter.post('/emailAuth', userController.getUser);
 userRouter.delete('/:email', userController.realDeleteUser);
 
 //특정 유저 검색
-userRouter.get('/:nickName',userController.getOneUser);
+userRouter.get('/:email',userController.getOneUser);
 
 
 module.exports = userRouter;
