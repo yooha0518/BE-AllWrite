@@ -9,7 +9,7 @@ const friendService = {
 		function resultList(arr) {
 			return arr.map((item) => {
 				const { nickName, profileImage } = item.friend;
-				return { friendNickName: nickName, profileImage };
+				return { friendNickName: nickName, friendProfileImage: profileImage };
 			});
 		}
 		return resultList(friends);
