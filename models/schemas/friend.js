@@ -2,9 +2,9 @@ const { Schema } = require("mongoose");
 const FriendSchema = new Schema(
 	{
 		email: {
-			type: String,
+					type: String,
 			unique: true,
-		},
+				},
 		friends: [],
 		req_friends: [
 			{
