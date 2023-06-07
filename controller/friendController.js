@@ -131,13 +131,12 @@ const friendController = {
 	//친구 삭제
 	async deleteFriend(req, res) {
 		try {
-			const { friendEmail } = req.params;
+			const { friendNickName } = req.params;
 			const { email, nickName } = req.user;
-			const friend = await userService.getUserFromEmail(friendEmail);
+			const friend = await userService.getUserFromNickName(friendNickName);
 			if (friend === null) {
 				return res.status(400).json({ message: "해당 유저는 없습니다." });
 			}
-			console.log(email, nickName, friendEmail, friend.nickName);
 			const result = await friendService.deleteFriend(
 				email,
 				nickName,
