@@ -14,6 +14,7 @@ router.get("/", (req, res) => {
 });
 router.use("/user", userRouter);
 router.use("/auth", authRouter);
+router.use("/friend", friendRouter);
 router.use("/adminUser", getUserFromJwt, adminUserRouter);
 router.use("/answer", answerRouter);
 router.use("/answer/:answerId/comment", commentRouter);
