@@ -4,7 +4,7 @@ const { Comment } = require('../models/index');
 
 const CommentController = {
   //댓글 생성
-	async createComment(req, res, next) {
+	async createComment(req, res) {
 		try {
 			console.log('댓글 생성!');
       const { answerId, nickName } = req.user;

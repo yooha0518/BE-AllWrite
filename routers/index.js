@@ -21,5 +21,5 @@ router.use("/adminUser", getUserFromJwt, adminUserRouter);
 router.use("/answer", answerRouter);
 router.use("/question", questionRouter);
 router.use("/answer/:answerId/comment", commentRouter);
-router.use("/answer/like/:answerId", likeRouter);
+router.use("/answer/like", likeRouter);
 module.exports = router;

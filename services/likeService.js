@@ -1,43 +1,31 @@
-const Like = require('../models/schemas/like');
+const {Like} = require('../models');
+
 
 // Create a new like
-exports.createLike = async (answerId, nickName) => {
-  try {
-    const like = await Like.findOne({ answerId });
-
-    if (!like) {
-      // If no like exists for the answerId, create a new like
-      const newLike = new Like({
-        answerId,
-        like: [{ nickName }],
-      });
-
-      await newLgiike.save();
-
-      return newLike;
-    } else {
-      // If like exists for the answerId, add the new nickname to the like array
-      like.like.push({ nickName });
-      await like.save();
-
-      return like;
-    }
-  } catch (err) {
-    throw err;
-  }
-};
-
-// Delete a like
-exports.deleteLike = async (likeId) => {
-  try {
-    const like = await Like.findById(likeId);
-
-    if (!like) {
-      throw new Error('Like not found');
-    }
-
-    await like.remove();
-  } catch (err) {
-    throw err;
-  }
-};
+const likeService = {
+  //조항요
+  async createLike  (answerId, nickName) {
+        const newLike = new Like({
+          answerId,
+          like: [{ nickName }],
+        });
+        
+  
+        const savedLike = await newLike.save();
+  
+        return savedLike;
+    },
+  
+  // Delete a like
+  async deleteLike (likeId) {
+      const like = await Like.deleteOne({_id:likeId});
+  
+      if (!like) {
+        throw new Error('Like not found');
+      }
+  
+    return like;
+  },
+  
+}
+module.exports = likeService;

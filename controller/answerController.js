@@ -4,7 +4,7 @@ const { Answer } = require('../models/index');
 
 const AnswerController = {
   //답변 생성
-	async createAnswer(req, res, next) {
+	async createAnswer(req, res) {
 		try {
 			console.log('답변 만들기!');
 			const {nickName} = req.user;

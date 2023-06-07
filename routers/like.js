@@ -1,11 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const likeController = require('../controller/likeController');
+const { Router } = require("express");
+const likeRouter = Router();
+const { likeController } = require("../controller");
+const getUserFromJwt = require("../middlewares/getUserFromJwt");
+
 
 // POST /like
-router.post('/like', likeController.createLike);
+likeRouter.post("/:answerId", getUserFromJwt, likeController.postLike);
 
 // DELETE /like/:id
-router.delete('/like/:id', likeController.deleteLike);
+likeRouter.delete("/:answerId", getUserFromJwt, likeController.deleteLike);
 
-module.exports = router;
+module.exports = likeRouter;
