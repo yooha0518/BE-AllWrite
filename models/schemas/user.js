@@ -7,6 +7,7 @@ const UserSchema = new Schema(
 		},
 		name: {
 			type: String,
+			required: true,
 		},
 		email: {
 			type: String,
@@ -22,15 +23,7 @@ const UserSchema = new Schema(
 			type: String,
 			default: null,
 		},
-		job: {
-			type: String,
-			default: null,
-		},
 		intro: {
-			type: String,
-			default: null,
-		},
-		dream: {
 			type: String,
 			default: null,
 		},
@@ -40,7 +33,7 @@ const UserSchema = new Schema(
 		},
 		experience: {
 			type: Number,
-			default: 1,
+			default: 0,
 		},
 		refreshToken: {
 			type: String,

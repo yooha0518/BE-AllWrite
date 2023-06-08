@@ -50,16 +50,13 @@ const userService = {
 	},
 	// 사용자 정보 수정
 	async updateUser(email, body) {
-		const { name, intro, mbti, job, state, dream } = body;
+		const { name, intro, mbti, state } = body;
 		//성공여부, 조건에 맞는 문서의 수, 새로 생성된 문서의 수, 새로 생성된 문서의 id값이 들어있음
 		const result = await User.updateOne(
 			{ email },
 			{
 				name,
-				intro,
 				mbti,
-				job,
-				dream,
 				state,
 				intro,
 			}
