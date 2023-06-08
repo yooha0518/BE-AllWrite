@@ -13,6 +13,9 @@ userRouter.get('/', getUserFromJwt, userController.getUser);
 //사용자 정보 수정
 userRouter.put('/', getUserFromJwt, userController.putUser);
 
+//사용자 경험치 증가
+userRouter.put('/exp', getUserFromJwt, userController.addUserExp);
+
 //사용자 계정 휴면
 userRouter.delete('/', getUserFromJwt, userController.deleteUser);
 
