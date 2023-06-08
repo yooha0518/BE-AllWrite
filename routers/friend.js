@@ -18,8 +18,8 @@ friendRouter.post("/response", getUserFromJwt, friendController.acceptFriend);
 //받은 친구요청 조회
 friendRouter.get("/request", getUserFromJwt, friendController.getReqfriend);
 
-// //받은 친구요청 거절
-// friendRouter.get("/request", getUserFromJwt, friendController.deleteReqfriend);
+//받은 친구요청 거절
+friendRouter.delete("/reject", getUserFromJwt, friendController.deleteReqfriend);
 
 //보낸 친구요청 조회
 friendRouter.get("/requested", getUserFromJwt, friendController.sendReqfriend);

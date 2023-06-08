@@ -14,7 +14,6 @@ const friendService = {
 					{ profileImage: 1, nickName: 1 }
 				)
 			);
-			console.log(`friendArr`, friendArr);
 		}
 		return friendArr;
 	},
@@ -58,10 +57,7 @@ const friendService = {
 		const user = await User.findOne({ email });
 		const friend = await User.findOne({ nickName: friendNickName });
 		const friendProfileImage = friend.profileImage;
-		console.log("friendProfileImage", friendProfileImage);
-		console.log("user: ", user);
 		const myNickName = user.nickName;
-		console.log("myNickName", myNickName);
 
 		const userResult = await Friend.updateOne(
 			{ email },
@@ -93,7 +89,6 @@ const friendService = {
 					{ profileImage: 1, nickName: 1 }
 				)
 			);
-			console.log(`friendArr`, friendArr);
 		}
 		return friendArr;
 	},
@@ -109,7 +104,6 @@ const friendService = {
 					{ profileImage: 1, nickName: 1 }
 				)
 			);
-			console.log(`friendArr`, friendArr);
 		}
 		return friendArr;
 	},
@@ -117,8 +111,7 @@ const friendService = {
 	async findReq(email, friendNickName) {
 		const resFriendsTable = await Friend.findOne({ email }, "res_friends");
 		const resFriends = resFriendsTable.res_friends;
-		console.log("resFriendsTable", resFriendsTable);
-		console.log("resFriends", resFriends);
+		console.log("resFriends", resFriendsTable);
 		let result = 0;
 		if (!resFriends) {
 			return result;
@@ -126,7 +119,6 @@ const friendService = {
 		for (let i = 0; i < resFriends.length; i++) {
 			if (resFriends[i].nickName === friendNickName) {
 				result = 1;
-				console.log("result:", result);
 			}
 		}
 		return result;
@@ -137,7 +129,7 @@ const friendService = {
 		const friend = await User.findOne({ nickName: friendNickName });
 
 		console.log("friend", friend);
-		//적용 안됨
+
 		const userResult1 = await Friend.updateOne(
 			{ email },
 			{
@@ -151,7 +143,6 @@ const friendService = {
 			}
 		);
 
-		//적용 안됨
 		const friendResult1 = await Friend.updateOne(
 			{ email: friend.email },
 			{
@@ -166,6 +157,16 @@ const friendService = {
 		);
 
 		return { userResult1, userResult2, friendResult1, friendResult2 };
+	},
+	// 친구 요청 거절
+	async rejectFriendReq(email, friendNickName) {
+		const result1 = await Friend.updateOne(
+			{ email },
+			{
+				$pull: { res_friends: { nickName: friendNickName } },
+			}
+		);
+		return result1;
 	},
 	// 친구 테이블 전체 정보 조회
 	async getFriendTable(email) {
