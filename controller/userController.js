@@ -121,6 +121,21 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
+	async addUserExp(req, res) {
+		try {
+			const { email } = req.user;
+			const result = await userService.updateUserExp(email);
+			res.status(200).json({
+				message: "경험치가 올랐습니다.",
+				result: result,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
+	},
 	async deleteProfileImate(req, res) {
 		try {
 			const { email } = req.user;

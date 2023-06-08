@@ -74,9 +74,18 @@ const userService = {
 				profileImage,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
+	},
+	async updateUserExp(email) {
+		const user = await User.findOne({ email });
+		const userExp = user.experience + 10;
+		const result = await User.updateOne(
+			{ email },
+			{
+				experience: userExp,
+			}
+		);
+		return result;
 	},
 	async getPasswordFromEmail(email, tempPassword) {
 		const result = await User.updateOne(
@@ -86,9 +95,7 @@ const userService = {
 				isTempPassword: true,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
 	},
 	async updatePasswordFromEmail(email, tempPassword) {
 		const result = await User.updateOne(
@@ -98,9 +105,7 @@ const userService = {
 				isTempPassword: true,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
 	},
 	async updatePasswordFromemail(email, password) {
 		const result = await User.updateOne(
@@ -110,9 +115,7 @@ const userService = {
 				isTempPassword: false,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
 	},
 	// 사용자 삭제 (회원탈퇴)
 	async deleteUser(email) {
