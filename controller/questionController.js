@@ -25,6 +25,18 @@ const questionController = {
 				.json({ message: "서버의 questionContrller에서 에러가 났습니다." });
 		}
 	},
+	//질문 날짜 초기화
+	async resetQuestion(req, res) {
+		try {
+			const reset = await questionService.resetQuestionDate();
+			res.status(200).json(reset);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 questionContrller에서 에러가 났습니다." });
+		}
+	},
 	//질문 생성
 	async createQuestion(req, res) {
 		try {
