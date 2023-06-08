@@ -13,10 +13,14 @@ questionRouter.get("/", questionController.getTodayQuestion);
 //질문 생성
 questionRouter.post("/", questionController.createQuestion);
 
+//질문 날짜 초기화
+questionRouter.delete("/reset", questionController.resetQuestion);
+
 //질문 수정
 questionRouter.put("/:questionId", questionController.updateQuestion);
 
 //질문 삭제
 questionRouter.delete("/:questionId", questionController.deleteQuestion);
+
 
 module.exports = questionRouter;
