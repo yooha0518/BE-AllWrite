@@ -136,6 +136,30 @@ const friendController = {
 				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
 		}
 	},
+	//받은 친구 요청 거절
+	async deleteReqfriend(req, res) {
+		try {
+			const { email } = req.user;
+			const { friendNickName } = req.body;
+
+			//친구 요청을 받았는지 확인
+			const request = await friendService.findReq(email, friendNickName);
+			if (!request) {
+				return res
+					.status(400)
+					.json({ message: "해당 유저는 요청을 보내지 않았습니다." });
+			}
+
+			const friendReq = await friendService.rejectFriendReq(email,friendNickName);
+
+			return res.status(200).json(friendReq);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
+		}
+	},
 	//친구 삭제
 	async deleteFriend(req, res) {
 		try {
