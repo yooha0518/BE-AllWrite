@@ -5,28 +5,29 @@ const {Like} = require('../models');
 const likeService = {
   //조항요
   async createLike  (answerId, nickName) {
+    let like = await Like.findOne({ answerId });
 
-        // const newLike = new Like({
-        //   answerId,
-        //   like: [{ nickName }],
-        // });
-        const answer = await Like.find({answerId:answerId})
-          if(!answer){
-            console.log('if문 실행')
-            await Like.create(
-              { answerId },
-              { $push: { like: { nickName:nickName } } }
-            );
-          }
-        const newLike = await Like.findOneAndUpdate(
-          { answerId },
-          { $push: { like: { nickName:nickName } } }
-        );
-        console.log(`[${answerId}]에 대한 좋아요가 추가되었습니다.`);
-      
-        // const savedLike = await newLike.save();
-  
-        return newLike;
+    if (!like) {
+      like = await Like.create({
+        answerId,
+        like: [{ nickName }],
+      });
+      console.log(`[${answerId}]에 대한 좋아요가 생성되었습니다.`);
+    } else {
+      const isLiked = like.like.some((item) => item.nickName === nickName);
+      if (isLiked) {
+        console.log(`[${answerId}]에 대한 좋아요는 이미 존재합니다.`);
+        return like;
+      }
+
+      like = await Like.findOneAndUpdate(
+        { answerId },
+        { $push: { like: { nickName } } },
+        { new: true }
+      );
+      console.log(`[${answerId}]에 대한 좋아요가 추가되었습니다.`);
+    }
+    return like;
     },
 
     	// like 조회

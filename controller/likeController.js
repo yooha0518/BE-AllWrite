@@ -57,7 +57,7 @@ const LikeController = {
         return res.status(404).json({ error: '게시글을 찾지 못했습니다.' });
       }
   
-      return res.status(200).json({ message: "좋아요 취소!" , like:like});
+      return res.status(200).json({ message: `${answerId}좋아요 취소!` , like:like});
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: 'likeController 서버에서 오류가 발생했습니다.' });
