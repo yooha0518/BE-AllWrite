@@ -7,8 +7,11 @@ const { authAdmin } = require('../middlewares/index');
 //질문 전체 조회
 questionRouter.get("/all", questionController.getAllQuestion);
 
-//오늘의 질문 5개 조회
+//오늘의 질문 3개 조회
 questionRouter.get("/", questionController.getTodayQuestion);
+
+//해당 날짜의 질문 조회
+questionRouter.get("/:date", questionController.getDateQuestion);
 
 //질문 생성
 questionRouter.post("/", questionController.createQuestion);

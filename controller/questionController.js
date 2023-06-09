@@ -13,11 +13,24 @@ const questionController = {
 				.json({ message: "서버의 questionContrller에서 에러가 났습니다." });
 		}
 	},
-	//오늘의 질문 5개 조회
+	//오늘의 질문 3개 조회
 	async getTodayQuestion(req, res) {
 		try {
 			const todayQuestions = await questionService.getTodayQuestion();
 			res.status(200).json(todayQuestions);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 questionContrller에서 에러가 났습니다." });
+		}
+	},
+	//해당 질문 3개 조회
+	async getDateQuestion(req, res) {
+		try {
+			const{ date } = req.params;
+			const dateQuestions = await questionService.getDateQuestion(date);
+			res.status(200).json(dateQuestions);
 		} catch (error) {
 			console.log(error);
 			return res

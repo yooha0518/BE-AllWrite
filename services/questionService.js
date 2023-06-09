@@ -20,7 +20,7 @@ const questionService = {
 		const allQuestion = await Question.find({});
 		return allQuestion;
 	},
-	//오늘의 질문 5개 조회
+	//오늘의 질문 3개 조회
 	async getTodayQuestion() {
 		let question = await Question.find({ date: currentDate });
 		console.log("question", question);
@@ -37,7 +37,14 @@ const questionService = {
 				question = await Question.find({ date: currentDate });
 			}
 		}
-		return {question};
+		return { question };
+	},
+	//해당 날짜 질문 3개 조회
+	async getDateQuestion(date) {
+		let question = await Question.find({ date: date });
+		console.log("question", question);
+
+		return question;
 	},
 	//질문 날짜 초기화
 	async resetQuestionDate() {
