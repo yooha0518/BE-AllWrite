@@ -8,7 +8,10 @@ const upload = require('../utils/upload.js');
 commentRouter.post('/:answerId',getUserFromJwt, commentController.createComment);
 
 //댓글 전체 조회
-commentRouter.get('/:answerId', getUserFromJwt, commentController.getCommentAll);
+// commentRouter.get('/:answerId', getUserFromJwt, commentController.getCommentAll);
+
+//answerId로 댓글 가져오기
+commentRouter.get('/:answerId', getUserFromJwt, commentController.getCommentByAnswerId);
 
 //댓글 조회
 commentRouter.get('/:answerId/:commentId', getUserFromJwt,  commentController.getComment);

@@ -66,7 +66,7 @@ const AnswerService = {
 			{_id: answerId}, updateData, option);
     return {message: '답변이 수정 되었습니다.', answer:updateAnswer };
   },
-	// 질문 삭제
+	// 답변 삭제
 	async deleteAnswer(answerId) {
 		const deleteResult = await Answer.deleteOne({_id: answerId});
 		console.log(deleteResult);
