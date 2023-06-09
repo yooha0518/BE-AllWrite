@@ -31,7 +31,7 @@ const CommentSchema = new Schema(
 			},
     ],
 	},
-	{ timestamps: true }
+	{ timestamps: false }
 );
 
 module.exports = CommentSchema;

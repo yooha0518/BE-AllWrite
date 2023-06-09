@@ -3,8 +3,8 @@ const { Comment, Answer } = require('../models');
 
 const CommentService = {
 	// 댓글 생성
-	async createComment(answerId, nickName, content) {
-    const newComment = new Comment({
+	async createComment(answerId, nickName,profileImage, content) {
+    const newComment = await Comment.create({
       answerId,
       comment: {
         nickName,
@@ -14,9 +14,7 @@ const CommentService = {
         reportCount: 0,
       },
     });
-
-    const savedComment = await newComment.save();
-    return savedComment;
+    return newComment;
 	},
 	// 댓글 조회
 	async getComment(commentId) {
@@ -45,7 +43,7 @@ const CommentService = {
 	async deleteComment(commentId) {
 		const deleteResult = await Comment.deleteOne({_id: commentId});
 		console.log(deleteResult);
-		return {message: '질문이 삭제 되었습니다.', Comment:deleteResult };
+		return {message: '댓글이 삭제 되었습니다.', Comment:deleteResult };
 	},
 };
 

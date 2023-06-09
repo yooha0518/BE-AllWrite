@@ -7,9 +7,13 @@ const CommentController = {
 	async createComment(req, res) {
 		try {
 			console.log('댓글 생성!');
-      const { answerId, nickName } = req.user;
+      const {  nickName, profileImage } = req.user;
+			const { answerId } = req.params;
       const { content } = req.body;
-      const savedComment = await commentService.createComment(answerId, nickName, content);
+			
+			console.log(answerId, nickName,profileImage);
+
+      const savedComment = await commentService.createComment(answerId, nickName,profileImage, content);
       res.status(201).json(savedComment);
 		} catch (error) {
 			console.log(error);
@@ -62,6 +66,7 @@ const CommentController = {
     try {
       const commentId = req.params.commentId;
       const { content } = req.body;
+			console.log(commentId);
       const comment = await commentService.getComment(commentId);
       if (!comment) {
         throw new Error("댓글을 찾을 수 없습니다.");
@@ -76,7 +81,7 @@ const CommentController = {
 
       res
         .status(200)
-        .json({ message: "댓글이 수정되었습니다." });
+        .json({ message: "댓글이 수정되었습니다." ,comment:comment});
 		} catch (error) {
 			console.log(error);
 			return res
