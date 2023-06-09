@@ -5,22 +5,25 @@ const getUserFromJwt = require('../middlewares/getUserFromJwt');
 const upload = require('../utils/upload.js');
 
 //답변 등록
-answerRouter.post('/',getUserFromJwt, answerController.createAnswer);
+answerRouter.post('/:questionId',getUserFromJwt, answerController.createAnswer);
 
 //답변 전체 조회
-answerRouter.get('/', getUserFromJwt, answerController.getAnswerAll);
+// answerRouter.get('/:questionId', getUserFromJwt, answerController.getAnswerAll);
+
+//questionId로 답변 가져오기
+answerRouter.get('/:questionId', getUserFromJwt, answerController.getAnswersByQuestionId);
 
 //친구 공개 글 조회
-answerRouter.get('/friend', getUserFromJwt, answerController.getFriendAnswers);
+answerRouter.get('/friend/:questionId', getUserFromJwt, answerController.getFriendAnswers);
 
 //답변 조회
-answerRouter.get('/:answerId', getUserFromJwt,  answerController.getAnswer);
+answerRouter.get('/:questionId/:answerId', getUserFromJwt,  answerController.getAnswer);
 
 //답변 수정
-answerRouter.put('/:answerId', getUserFromJwt, answerController.putAnswer);
+answerRouter.put('/:questionId/:answerId', getUserFromJwt, answerController.putAnswer);
 
 //답변 삭제
-answerRouter.delete('/:answerId',getUserFromJwt, answerController.deleteAnswer);
+answerRouter.delete('/:questionId/:answerId',getUserFromJwt, answerController.deleteAnswer);
 
 
 module.exports = answerRouter;

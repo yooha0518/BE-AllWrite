@@ -7,19 +7,30 @@ const AnswerService = {
 	// 	const createdAnswer = await Answer.create(,{ content,reportCount,stateCode,  createdAt });
 	// 	return createdAnswer;
 	// },
-	async createAnswer( {nickName,  content,reportCount,stateCode,  createdAt }) {
+	async createAnswer( { nickName,questionId, content,reportCount,stateCode,  createdAt }) {
     const newAnswer = new Answer({
+			questionId,
         nickName,
         content,
 				stateCode,
         createdAt: new Date(),
         updatedAt: new Date(),
         reportCount: 0,
-      
     });
 
     const savedAsnwer = await newAnswer.save();
     return savedAsnwer;
+	},
+
+	async getAnswersByQuestionId  (questionId) {
+		try {
+			const answers = await Answer.find({ questionId });
+			console.log(`질문 ID(${questionId})에 대한 답변을 가져왔습니다.`);
+			return answers;
+		} catch (error) {
+			console.error('답변 가져오기 중 오류 발생:', error);
+			throw error;
+		}
 	},
 
 

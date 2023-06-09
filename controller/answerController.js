@@ -8,6 +8,7 @@ const AnswerController = {
 		try {
 			console.log('답변 만들기!');
 			const {nickName} = req.user;
+			const{questionId} = req.params;
 			const { content, stateCode, reportCount } = req.body;
 			console.log(nickName);
 			// const userId = req.currentUserId;
@@ -17,7 +18,7 @@ const AnswerController = {
 			}
 			// const reportCount = 0;
 			// const stateCode = 1;
-			const answer = await answerService.createAnswer({ nickName, content,reportCount,stateCode,  createdAt });
+			const answer = await answerService.createAnswer({ nickName,questionId, content,reportCount,stateCode,  createdAt });
 			res
         .status(201)
         .json({ message: "답변이 작성되었습니다.", answer: answer });
@@ -47,7 +48,22 @@ const AnswerController = {
 	// 	}
 	// },
 
-
+	
+	async getAnswersByQuestionId(req, res) {
+		try {
+			const { questionId } = req.params;
+			console.log('questionId로 답변 조회');
+			console.log(questionId)
+      // db에서 모든 게시글 조회
+      const result = await answerService.getAnswersByQuestionId(questionId);
+      res.status(200).json(result);
+    } catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
+    }
+	},
   //전체 답변 조회
 	async getAnswerAll(req, res) {
 		try {
