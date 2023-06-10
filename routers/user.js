@@ -24,12 +24,12 @@ userRouter.post('/changePassword', getUserFromJwt, userController.putPassword);
 
 
 //사용자 프로필사진 등록
-userRouter.post(
-	'/profileImage',
-	getUserFromJwt,
-	upload.single('profileImage'),
-	userController.putProfileImage
-);
+// userRouter.post(
+// 	'/profileImage',
+// 	getUserFromJwt,
+// 	upload.single('profileImage'),
+// 	userController.putProfileImage
+// );
 //사용자 프로필사진 삭제
 userRouter.delete(
 	'/profileImage',

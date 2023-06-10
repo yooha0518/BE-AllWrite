@@ -49,6 +49,25 @@ const AnswerController = {
 	// },
 
 	
+	
+	async getDetailAnswers(req, res) {
+		try {
+			const { questionId,answerId } = req.params;
+			console.log('questionId로 답변 조회');
+			console.log("questionId = ",questionId);
+			console.log("answerId = ",answerId);
+      // db에서 모든 게시글 조회
+      const result = await answerService.getDetailAnswers(questionId, answerId);
+      res.status(200).json(result);
+    } catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
+    }
+	},
+
+
 	async getAnswersByQuestionId(req, res) {
 		try {
 			const { questionId } = req.params;

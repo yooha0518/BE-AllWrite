@@ -1,4 +1,4 @@
-const { Answer } = require('../models');
+const { Answer,Like } = require('../models');
 
 
 const AnswerService = {
@@ -20,6 +20,19 @@ const AnswerService = {
 
     const savedAsnwer = await newAnswer.save();
     return savedAsnwer;
+	},
+	
+	async getDetailAnswers (questionId, answerId) {
+		try {
+			const answers = await Answer.find({ _id:answerId });
+			const likeCount = await Like.countDocuments({ answerId });
+			console.log(likeCount);
+			console.log(`질문 ID(${answerId})에 대한 답변 상세를 가져왔습니다.`);
+			return {answers,likeCount};
+		} catch (error) {
+			console.error('답변 가져오기 중 오류 발생:', error);
+			throw error;
+		}
 	},
 
 	async getAnswersByQuestionId  (questionId) {
