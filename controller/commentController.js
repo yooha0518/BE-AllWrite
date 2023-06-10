@@ -27,7 +27,6 @@ const CommentController = {
 	async getCommentByAnswerId(req, res) {
 		try {
 			const { answerId } = req.params;
-			console.log('answerId로 답변 조회');
 			console.log(answerId)
       // db에서 모든 게시글 조회
       const result = await commentService.getCommentByAnswerId(answerId);
