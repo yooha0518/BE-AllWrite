@@ -69,7 +69,9 @@ const AnswerController = {
 		try {
 			console.log('모든 답변 조회');
       // db에서 모든 게시글 조회
-      const result = await answerService.getAnswerAll();
+
+			const { questionId } = req.params;
+      const result = await answerService.getAnswersByQuestionIdAll(questionId);
       res.status(200).json(result);
     } catch (error) {
 			console.log(error);
@@ -91,35 +93,15 @@ const AnswerController = {
 	// 친구 공개 게시글을 조회하는 컨트롤러 함수
 	async getFriendAnswers(req, res) {
 		try {
-			const answers = await answerService.getFriendAnswers(); // 친구 공개 게시글을 서비스에서 조회합니다.
+			const {questionId} = req.params; 
+			const answers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
 			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
 		}
 	},
 
-	//답변 조회
-	async getAnswer(req, res) {
-		try {
-			console.log('검색 답변 조회');
-      // req.parmas에서 답변id 가져옴
-      const answerId = req.params.answerId;
 
-      // db에서 해당 id의 답변 조회
-      const answer = await answerService.getAnswer(answerId);
-
-      // 해당 답변이 없을 경우 에러 메세지
-      if (!answer) {
-        throw new Error("답변을 찾을 수 없습니다.");
-      }
-      res.status(200).json(answer);
-    } catch (error) {
-			console.log(error);
-			return res
-				.status(500)
-				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
-    }
-	},
 	async putAnswer(req, res) {
 		try {
 			console.log('검색 답변 수정');

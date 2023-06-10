@@ -8,16 +8,13 @@ const upload = require('../utils/upload.js');
 answerRouter.post('/:questionId',getUserFromJwt, answerController.createAnswer);
 
 //답변 전체 조회
-// answerRouter.get('/:questionId', getUserFromJwt, answerController.getAnswerAll);
+answerRouter.get('/:questionId', getUserFromJwt, answerController.getAnswerAll);
 
 //questionId로 답변 가져오기
 answerRouter.get('/:questionId', getUserFromJwt, answerController.getAnswersByQuestionId);
 
 //친구 공개 글 조회
 answerRouter.get('/friend/:questionId', getUserFromJwt, answerController.getFriendAnswers);
-
-//답변 조회
-answerRouter.get('/:questionId/:answerId', getUserFromJwt,  answerController.getAnswer);
 
 //답변 수정
 answerRouter.put('/:questionId/:answerId', getUserFromJwt, answerController.putAnswer);

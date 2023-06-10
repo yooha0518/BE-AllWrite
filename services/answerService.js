@@ -24,8 +24,19 @@ const AnswerService = {
 
 	async getAnswersByQuestionId  (questionId) {
 		try {
-			const answers = await Answer.find({ questionId });
-			console.log(`질문 ID(${questionId})에 대한 답변을 가져왔습니다.`);
+			const answers = await Answer.find({ questionId,stateCode: true });
+			console.log(`질문 ID(${questionId})에 대한 전체 공개 답변을 가져왔습니다.`);
+			return answers;
+		} catch (error) {
+			console.error('답변 가져오기 중 오류 발생:', error);
+			throw error;
+		}
+	},
+
+	async getAnswersByQuestionIdAll  (questionId) {
+		try {
+			const answers = await Answer.find({ questionId});
+			console.log(`질문 ID(${questionId})에 대한 모든 답변을 가져왔습니다.`);
 			return answers;
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);
@@ -34,26 +45,14 @@ const AnswerService = {
 	},
 
 
-	// 답변 조회
-	async getAnswer(answerId) {
-		const answer = await Answer.findOne( {_id: answerId} );
-		return answer;
-	},
-  // 전체 답변 조회
-	async getAnswerAll() {
-    const answer = await Answer.find({});
-    return answer;
-	},
-
-	// 전체 공개 게시글을 조회하는 함수
-	async getPublicAnswers() {
-			const answers = await Answer.find({ stateCode: true }).populate('nickName'); // stateCode가 true인 글을 조회하고, 작성자 정보를 가져옵니다.
-			return answers;
-	},
-
 	// 친구 공개 게시글을 조회하는 함수
-	async  getFriendAnswers() {
-			const answers = await Answer.find({ stateCode: false })
+	async  getFriendAnswers(questionId) {
+			// const answers = await Answer.find({ stateCode: false })
+			const answers = await Answer.find({ questionId, stateCode: false });
+			console.log(`질문 ID(${questionId})에 대한 친구공개 답변을 가져왔습니다.`);
+			return answers;
+
+
 			// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
 			return answers;
 },
