@@ -107,9 +107,8 @@ const userController = {
 	},
 	async putProfileImage(req, res) {
 		try {
-			console.log("프로필사진 수정 시작");
 			const { email } = req.user;
-			const profileImage = `http://localhost:5000/${req.file.filename}`;
+			const profileImage = `http://allwrite.kro.kr:5000/${req.file.filename}`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 수정되었습니다.",
@@ -122,10 +121,25 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
+	async addUserExp(req, res) {
+		try {
+			const { email } = req.user;
+			const result = await userService.updateUserExp(email);
+			res.status(200).json({
+				message: "경험치가 올랐습니다.",
+				result: result,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
+	},
 	async deleteProfileImate(req, res) {
 		try {
 			const { email } = req.user;
-			const profileImage = `http://localhost:5000/defaultImage.png`;
+			const profileImage = `http://allwrite.kro.kr:5000/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 삭제되었습니다.",
@@ -220,7 +234,7 @@ const userController = {
 			}
 
 			res.status(200).json({
-				message: "토큰이 발급되었습니다.",
+				message: "로그인 되었습니다.",
 				token: setUserToken(user, 0),
 			});
 		} catch (error) {
@@ -241,8 +255,8 @@ const userController = {
 	},
 	async getOneUser(req, res) {
 		try {
-			const { email } = req.params;
-			const user = await userService.adminReadSearchUser(email);
+			const { nickName } = req.params;
+			const user = await userService.SearchUser(nickName);
 			if (!user) {
 				return res.status(400).json({ message: "해당 유저가 없습니다." });
 			}

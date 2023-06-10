@@ -10,6 +10,9 @@ answerRouter.post('/',getUserFromJwt, answerController.createAnswer);
 //답변 전체 조회
 answerRouter.get('/', getUserFromJwt, answerController.getAnswerAll);
 
+//친구 공개 글 조회
+answerRouter.get('/friend', getUserFromJwt, answerController.getFriendAnswers);
+
 //답변 조회
 answerRouter.get('/:answerId', getUserFromJwt,  answerController.getAnswer);
 

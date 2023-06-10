@@ -50,16 +50,13 @@ const userService = {
 	},
 	// 사용자 정보 수정
 	async updateUser(email, body) {
-		const { name, intro, mbti, job, state, dream } = body;
+		const { name, intro, mbti, state } = body;
 		//성공여부, 조건에 맞는 문서의 수, 새로 생성된 문서의 수, 새로 생성된 문서의 id값이 들어있음
 		const result = await User.updateOne(
 			{ email },
 			{
 				name,
-				intro,
 				mbti,
-				job,
-				dream,
 				state,
 				intro,
 			}
@@ -77,9 +74,28 @@ const userService = {
 				profileImage,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
+	},
+	async updateUserExp(email) {
+		const user = await User.findOne({ email });
+		const userExp = user.experience + 10;
+		const result = await User.updateOne(
+			{ email },
+			{
+				experience: userExp,
+			}
+		);
+		return result;
+	},
+	async getPasswordFromEmail(email, tempPassword) {
+		const result = await User.updateOne(
+			{ email },
+			{
+				password: hashPassword(tempPassword),
+				isTempPassword: true,
+			}
+		);
+		return result;
 	},
 	async updatePasswordFromEmail(email, tempPassword) {
 		const result = await User.updateOne(
@@ -89,9 +105,7 @@ const userService = {
 				isTempPassword: true,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
 	},
 	async updatePasswordFromemail(email, password) {
 		const result = await User.updateOne(
@@ -101,9 +115,7 @@ const userService = {
 				isTempPassword: false,
 			}
 		);
-		return {
-			message: `요청: ${result.acknowledged}, 요청된 문서의 수: ${result.modifiedCount}`,
-		};
+		return result;
 	},
 	// 사용자 삭제 (회원탈퇴)
 	async deleteUser(email) {
@@ -116,8 +128,8 @@ const userService = {
 	},
 
 	//특정 사용자 조회
-	async adminReadSearchUser(email) {
-		const user = await User.findOne({ email });
+	async SearchUser(nickName) {
+		const user = await User.findOne({ nickName });
 		return user;
 	},
 	//관리자 - 사용자 전체 정보 조회

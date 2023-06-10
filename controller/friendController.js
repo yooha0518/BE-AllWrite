@@ -28,17 +28,6 @@ const friendController = {
 				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
 		}
 	},
-	// //친구 정보 조회
-	// async getOnefriend(req, res, next) {
-	// 	try {
-	// 		const { email } = req.params;
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return res
-	// 			.status(500)
-	// 			.json({ message: '서버의 friendContrller에서 에러가 났습니다.' });
-	// 	}
-	// },
 	//친구 요청 보내기
 	async sendFriend(req, res) {
 		try {
@@ -49,7 +38,10 @@ const friendController = {
 				return res.status(400).json({ message: "적절한 값을 입력하세요." });
 			}
 
-			const alreadyFriend = await friendService.getFriendCheck(email,friendNickName);
+			const alreadyFriend = await friendService.getFriendCheck(
+				email,
+				friendNickName
+			);
 			console.log("alreadyFriend", alreadyFriend);
 			if (alreadyFriend) {
 				return res
@@ -82,9 +74,10 @@ const friendController = {
 
 			const result = await friendService.createFriendReq(email, friendNickName);
 
-			return res
-				.status(200)
-				.json({ message: "친구 요청을 보냈습니다. ", result });
+			return res.status(200).json({
+				message: `${friendNickName}님께 친구 요청을 보냈습니다. `,
+				result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -97,8 +90,18 @@ const friendController = {
 		try {
 			const { email } = req.user;
 			const { friendNickName } = req.body;
+
+			const request = await friendService.findReq(email, friendNickName);
+			if (!request) {
+				return res
+					.status(400)
+					.json({ message: "해당 유저는 요청을 보내지 않았습니다." });
+			}
 			const result = await friendService.acceptFriend(email, friendNickName);
-			return res.status(200).json(result);
+			return res.status(200).json({
+				message: `${friendNickName}님과 친구가 되었습니다.`,
+				result: result,
+			});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -133,17 +136,56 @@ const friendController = {
 				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
 		}
 	},
-	// //친구 삭제
-	// async deleteFriend(req, res) {
-	// 	try {
-	// 		const { email } = req.params;
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return res
-	// 			.status(500)
-	// 			.json({ message: '서버의 friendContrller에서 에러가 났습니다.' });
-	// 	}
-	// },
+	//받은 친구 요청 거절
+	async deleteReqfriend(req, res) {
+		try {
+			const { email } = req.user;
+			const { friendNickName } = req.body;
+
+			//친구 요청을 받았는지 확인
+			const request = await friendService.findReq(email, friendNickName);
+			if (!request) {
+				return res
+					.status(400)
+					.json({ message: "해당 유저는 요청을 보내지 않았습니다." });
+			}
+
+			const friendReq = await friendService.rejectFriendReq(email,friendNickName);
+
+			return res.status(200).json(friendReq);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
+		}
+	},
+	//친구 삭제
+	async deleteFriend(req, res) {
+		try {
+			const { friendNickName } = req.params;
+			const { email, nickName } = req.user;
+			const friend = await userService.getUserFromNickName(friendNickName);
+			if (friend === null) {
+				return res.status(400).json({ message: "해당 유저는 없습니다." });
+			}
+			const result = await friendService.deleteFriend(
+				email,
+				nickName,
+				friendEmail,
+				friend.nickName
+			);
+			return res.status(200).json({
+				message: `친구목록에서 ${friend.nickName}님이 삭제 되었습니다.`,
+				...result,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
+		}
+	},
 };
 
 module.exports = friendController;
