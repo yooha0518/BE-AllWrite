@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const env = require('./.env');
 const app = express();
+const https = require('https');
+const fs = require('fs');
 
 //routers
 const apiRouter = require('./routers');
@@ -61,11 +63,20 @@ app.use((err, req, res, next) => {
 app.use((req, res) => {
 	throw createError(404);
 });
+
+const options = {
+    key: fs.readFileSync('/etc/nginx/ssl/private.key'),
+    cert: fs.readFileSync('/etc/nginx/ssl/combined.crt')
+}
+
+const server = https.createServer(options,app);
+
 //서버연결
-app.listen(env.PORT, '0.0.0.0', (err) => {
-	if (err) {
-		console.log(`서버 연결 실패 : ${err}`);
-	} else {
-		console.log(`${env.PORT}서버 연결 성공`);
-	}
+server.listen(env.PORT, '0.0.0.0', (err) => {
+    if (err) {
+            console.log(`서버 연결 실패 : ${err}`);
+    } else {
+            console.log(`${env.PORT}서버 연결 성공`);
+    }
 });
+
