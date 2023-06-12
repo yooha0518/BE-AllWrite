@@ -5,6 +5,10 @@ const AnswerSchema = new Schema(
 			type: String,
 			ref: 'user',
 		},
+    questionId:	{
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
 		content:	{
         type: String,
         required: true,
@@ -27,7 +31,7 @@ const AnswerSchema = new Schema(
         required : true,
       }
 	},
-	{ timestamps: true }
+	{ timestamps: false }
 );
 
 module.exports = AnswerSchema;

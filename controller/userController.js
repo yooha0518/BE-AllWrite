@@ -138,6 +138,7 @@ const userController = {
 	},
 	async deleteProfileImate(req, res) {
 		try {
+			console.log('프로필사진 수정 시작');
 			const { email } = req.user;
 			const profileImage = `http://allwrite.kro.kr:5000/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
