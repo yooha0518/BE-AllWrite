@@ -19,8 +19,8 @@ answerRouter.get('/friend/:questionId', getUserFromJwt, answerController.getFrie
 //답변 상세 조회
 answerRouter.get('/detail/:questionId/:answerId', getUserFromJwt, answerController.getDetailAnswers);
 
-//답변 신고
-answerRouter.post()
+// //답변 신고
+// answerRouter.post()
 
 
 //답변 수정
