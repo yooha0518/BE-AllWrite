@@ -187,13 +187,21 @@ const friendService = {
 	},
 	// 친구 요청 거절
 	async rejectFriendReq(email, friendNickName) {
-		const result1 = await Friend.updateOne(
+		const user = await User.findOne({ email });
+		const friend = await User.findOne({ nickName: friendNickName });
+		const userResult = await Friend.updateOne(
 			{ email },
 			{
 				$pull: { res_friends: { nickName: friendNickName } },
 			}
 		);
-		return result1;
+		const friendResult = await Friend.updateOne(
+			{ email: friend.email },
+			{
+				$pull: { req_friends: { nickName: user.nickName } },
+			}
+		);
+		return { userResult, friendResult };
 	},
 	// 친구 테이블 전체 정보 조회
 	async getFriendTable(email) {
