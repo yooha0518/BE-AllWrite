@@ -21,7 +21,7 @@ async adminDeleteAnswer(req, res) {
     try {
       console.log('adminGetComplaint 실행');
       const { answerId } = req.body;
-      const result = await adminService.adminGetComplaint(answerId);
+      const result = await adminService.adminGetComplaintAnswer();
       res.send(result);
     } catch (error) {
       console.log(error);
