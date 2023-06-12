@@ -24,6 +24,7 @@ const questionService = {
 	async getTodayQuestion() {
 		let question = await Question.find({ date: currentDate });
 		console.log("question", question);
+		console.log("오늘 날짜 :", currentDate);
 		if (question.length < 3) {
 			for (let i = 0; i < 3; i++) {
 				const result = await Question.findOneAndUpdate(
@@ -32,9 +33,8 @@ const questionService = {
 						date: currentDate,
 					}
 				);
-				console.log("오늘 날짜 :", currentDate);
-				console.log("오늘의 질문 생성 :", result);
 				question = await Question.find({ date: currentDate });
+				console.log("오늘의 질문 생성 :", result);
 			}
 		}
 		return { question };
