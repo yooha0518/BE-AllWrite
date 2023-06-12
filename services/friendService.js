@@ -211,16 +211,17 @@ const friendService = {
 
 	// 친구 삭제
 	async deleteFriend(email, nickName, friendEmail, friendNickName) {
+		console.log("all: ", email, nickName, friendEmail, friendNickName);
 		const result1 = await Friend.updateOne(
 			{ email },
 			{
-				$pull: { friends: { friendNickName: friendNickName } },
+				$pull: { friends: { nickName: friendNickName } },
 			}
 		);
 		const result2 = await Friend.updateOne(
-			{ friendEmail },
+			{ email: friendEmail },
 			{
-				$pull: { friends: { friendNickName: nickName } },
+				$pull: { friends: { nickName: nickName } },
 			}
 		);
 		return { result1, result2 };
