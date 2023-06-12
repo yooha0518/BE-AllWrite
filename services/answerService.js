@@ -1,4 +1,4 @@
-const { Answer,Like } = require('../models');
+const { Answer,Like,Comment } = require('../models');
 
 
 const AnswerService = {
@@ -31,9 +31,10 @@ const AnswerService = {
 
 				// 좋아요 여부를 나타내는 flag
 				const isLiked = like && like.like.some((item) => item.nickName === nickName);
+				const comments = await Comment.find({ answerId });
 			console.log(likeCount);
 			console.log(`질문 ID(${answerId})에 대한 답변 상세를 가져왔습니다.`);
-			return {answers,likeCount,isLiked};
+			return {answers,likeCount,isLiked,comments};
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);
 			throw error;
