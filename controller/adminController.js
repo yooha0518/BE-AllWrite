@@ -8,7 +8,7 @@ async adminDeleteAnswer(req, res) {
     console.log('adminAnserDelete 실행');
     const { answerId } = req.body;
     const result = await adminService.adminDeleteAnswer(answerId);
-    res.send(result);
+    return res.status(200).send(result);
   } catch (error) {
     console.log(error);
     return res
@@ -22,7 +22,7 @@ async adminDeleteAnswer(req, res) {
       console.log('adminGetComplaint 실행');
       const { answerId } = req.body;
       const result = await adminService.adminGetComplaintAnswer();
-      res.send(result);
+      return res.status(200).send(result);
     } catch (error) {
       console.log(error);
       return res
@@ -30,6 +30,35 @@ async adminDeleteAnswer(req, res) {
         .json({ message: '서버의 adminContrller에서 에러가 났습니다.' });
     }
   },
+  //ADMIN 모든 댓글 조회
+  async adminGetComment(req, res) {
+    try {
+      console.log('adminGetComment 실행');
+      const result = await adminService.adminGetComment();
+      return res.status(200).send(result);
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ message: '서버의 adminContrller에서 에러가 났습니다.' });
+    }
+  },
+  //댓글 삭제
+  async adminDeleteComment(req, res) {
+    try {
+      console.log('adminDeleteComment 실행');
+      const {commentId} =req.params;
+      console.log(commentId);
+      const result = await adminService.adminDeleteComment(commentId);
+      return res.status(200).send(result);
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ message: '서버의 adminContrller에서 에러가 났습니다.' });
+    }
+  },
+
 
 }
 

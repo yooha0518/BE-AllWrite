@@ -1,4 +1,4 @@
-const { User, Answer } = require('../models');
+const { User, Answer,Comment } = require('../models');
 
 
 const AdminService = {
@@ -16,6 +16,26 @@ async adminReadUser(page) {
     const answers = await Answer.find({ reportCount: { $gte: 1 } });
     console.log(answers);
     return { message: '신고된 답변을 가져왔습니다.',answer:answers };
+  },
+
+  // 관리자 - 모든 댓글 조회
+  async adminGetComment() {
+    // const comments = await Comment.find().sort({ createdAt: 'desc' });
+    const comments = await Comment.find().sort({ createdAt: -1 });
+    console.log(comments);
+    return { message: '댓글을 최신순으로 가져왔습니다.',comment:comments };
+  },
+
+  // 관리자 - 댓글 삭제
+  async adminDeleteComment(commentId) {
+    // 댓글을 삭제합니다.
+     // commentId를 기반으로 댓글을 찾습니다.
+    const comment = await Comment.findOneAndUpdate(
+      { 'comment._id': commentId },
+      { $pull: { comment: { _id: commentId } } },
+      { new: true }
+    );
+    return comment;
   },
 
   // 관리자 - 답변 삭제
