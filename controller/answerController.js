@@ -156,7 +156,7 @@ const AnswerController = {
 			const answerId = req.params.answerId;
 			// 답변 조회
 			const answer = await answerService.reportAnswer(answerId);
-			res.status(200).json({ message: '답변이 신고되었습니다.' });
+			res.status(200).json({ message: '답변이 신고되었습니다.', answer:answer });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: '서버 에러' });

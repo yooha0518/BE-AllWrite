@@ -89,9 +89,7 @@ const AnswerService = {
 		answer.reportCount += 1;
 	
 		// 답변 저장
-		await answer.save();
-
-		return {message: '답변이 수정 되었습니다.', answer:answer };
+		return await answer.save();
 	},
   //answerId를 사용해 답변 수정
   async updateAnswer(answerId, updateData) {
