@@ -186,13 +186,14 @@ const friendController = {
 			const { friendNickName } = req.params;
 			const { email, nickName } = req.user;
 			const friend = await userService.getUserFromNickName(friendNickName);
+			console.log("friend: ", friend);
 			if (friend === null) {
 				return res.status(400).json({ message: "해당 유저는 없습니다." });
 			}
 			const result = await friendService.deleteFriend(
 				email,
 				nickName,
-				friendEmail,
+				friend.email,
 				friend.nickName
 			);
 			return res.status(200).json({
