@@ -1,35 +1,13 @@
-const { Schema } = require('mongoose');
+const { Schema } = require("mongoose");
 const FriendSchema = new Schema(
 	{
-		nickName: {
-			type: Schema.Types.ObjectId,
-            unique:true,
-			ref: 'User',
-		},
-		friends: [
-			{
-				nickName: {
+		email: {
 					type: String,
-					required: true,
+			unique: true,
 				},
-			},
-		],
-		req_friends: [
-			{
-				nickName: {
-					type: String,
-					required: true,
-				},
-			},
-		],
-		res_friends: [
-			{
-				nickName: {
-					type: String,
-					required: true,
-				},
-			},
-		],
+		friends: [],
+		req_friends: [],
+		res_friends: [],
 	},
 	{ timestamps: false }
 );
