@@ -16,7 +16,13 @@ const userService = {
 	// 사용자 정보 조회
 	async getUser(email) {
 		const user = await User.findOne({ email });
-		return user;
+		const level = Math.floor(user.experience / 100) + 1;
+		let currentExp = user.experience.toString(); // 숫자를 문자열로 변환
+
+		if (currentExp.length >= 2) {
+			currentExp = currentExp.substring(currentExp.length - 2); // 뒤 두 자리 추출
+		}
+		return { ...user._doc, level, currentExp };
 	},
 	async getUserpassword(email) {
 		const user = await User.findOne({ email }, "password");
