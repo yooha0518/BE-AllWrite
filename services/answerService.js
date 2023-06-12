@@ -22,13 +22,18 @@ const AnswerService = {
     return savedAsnwer;
 	},
 	
-	async getDetailAnswers (questionId, answerId) {
+	async getDetailAnswers (questionId, answerId,nickName) {
 		try {
 			const answers = await Answer.find({ _id:answerId });
 			const likeCount = await Like.countDocuments({ answerId });
+			  // 좋아요 정보 조회
+				const like = await Like.findOne({ answerId });
+
+				// 좋아요 여부를 나타내는 flag
+				const isLiked = like && like.like.some((item) => item.nickName === nickName);
 			console.log(likeCount);
 			console.log(`질문 ID(${answerId})에 대한 답변 상세를 가져왔습니다.`);
-			return {answers,likeCount};
+			return {answers,likeCount,isLiked};
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);
 			throw error;

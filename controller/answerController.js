@@ -56,8 +56,9 @@ const AnswerController = {
 			console.log('questionId로 답변 조회');
 			console.log("questionId = ",questionId);
 			console.log("answerId = ",answerId);
+			const {nickName} = req.user;
       // db에서 모든 게시글 조회
-      const result = await answerService.getDetailAnswers(questionId, answerId);
+      const result = await answerService.getDetailAnswers(questionId, answerId,nickName);
       res.status(200).json(result);
     } catch (error) {
 			console.log(error);
