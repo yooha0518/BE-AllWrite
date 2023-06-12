@@ -67,7 +67,7 @@ const userController = {
 					await sendMail(
 						email,
 						`All Write 인증번호`,
-						"All Write 임시 비밀번호",
+						"이메일 인증번호",
 						`${authCode}`,
 						7
 					);
@@ -168,8 +168,8 @@ const userController = {
 			await sendMail(
 				email,
 				"All Write 임시 비밀번호",
+				"임시 비밀번호",
 				`${tempPassword}`,
-				`로그인후 비밀번호를 변경해 주세요.`,
 				7
 			);
 
