@@ -136,7 +136,14 @@ const userService = {
 	//특정 사용자 조회
 	async SearchUser(nickName) {
 		const user = await User.findOne({ nickName });
-		return user;
+
+		const level = Math.floor(user.experience / 100) + 1;
+		let currentExp = user.experience.toString(); // 숫자를 문자열로 변환
+
+		if (currentExp.length >= 2) {
+			currentExp = currentExp.substring(currentExp.length - 2); // 뒤 두 자리 추출
+		}
+		return { ...user._doc, level, currentExp };
 	},
 	//관리자 - 사용자 전체 정보 조회
 	async adminReadUser(page) {

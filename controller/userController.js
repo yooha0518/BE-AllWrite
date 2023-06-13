@@ -90,6 +90,21 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
+	async getOneUser(req, res) {
+		try {
+			const { nickName } = req.params;
+			const user = await userService.SearchUser(nickName);
+			if (!user) {
+				return res.status(400).json({ message: "해당 유저가 없습니다." });
+			}
+			res.json(user);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
+	},
 	async putUser(req, res) {
 		try {
 			const { email } = req.user;
@@ -253,21 +268,6 @@ const userController = {
 			message: "토큰이 발급되었습니다.",
 			token: setUserToken(userForToken, 1),
 		});
-	},
-	async getOneUser(req, res) {
-		try {
-			const { nickName } = req.params;
-			const user = await userService.SearchUser(nickName);
-			if (!user) {
-				return res.status(400).json({ message: "해당 유저가 없습니다." });
-			}
-			res.json(user);
-		} catch (error) {
-			console.log(error);
-			return res
-				.status(500)
-				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
-		}
 	},
 	async adminGetUserlist(req, res) {
 		try {
