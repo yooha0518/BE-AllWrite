@@ -14,4 +14,5 @@ module.exports = {
 	likeController,
 	friendController,
 	emotionController,
+	adminController,
 };
