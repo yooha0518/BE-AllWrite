@@ -38,6 +38,30 @@ async adminReadUser(page) {
     return comment;
   },
 
+
+
+  // 관리자 - 댓글 신고 조회
+  async adminGetComplaintComment() {
+    // 댓글을 삭제합니다.
+    // commentId를 기반으로 댓글을 찾습니다.
+    // const comments = await Comment.find({
+    //   'comment.reportCount': { $gte: 1 },
+    // });
+    const comments = await Comment.aggregate([
+      { $unwind: '$comment' },
+      { $match: { 'comment.reportCount': { $gte: 1 } } },
+      {
+        $group: {
+          _id: '$_id',
+          answerId: { $first: '$answerId' },
+          comment: { $push: '$comment' },
+          __v: { $first: '$__v' },
+        },
+      },
+    ]);
+    return comments;
+  },
+
   // 관리자 - 답변 삭제
   async adminDeleteAnswer(answerId) {
     const deleteResult = await User.deleteOne({ answerId });
