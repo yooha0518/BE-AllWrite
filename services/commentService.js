@@ -1,4 +1,4 @@
-const { Comment, Answer, Like } = require('../models');
+const { Comment, Answer, Like, User } = require('../models');
 
 
 const CommentService = {
@@ -14,6 +14,7 @@ const CommentService = {
       createdAt: new Date(),
       updatedAt: new Date(),
       reportCount,
+      profileImage,
     };
     // console.log(newComment, answerId, nickName);
     if (!comment) {
@@ -50,9 +51,8 @@ const CommentService = {
   async getCommentByAnswerId (answerId) {
 		try {
 			const comments = await Comment.find({ answerId });
-
-			console.log(`(${answerId})에 대한 댓글을 가져왔습니다.`);
       
+			console.log(`(${answerId})에 대한 댓글을 가져왔습니다.`);
 			return comments;
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);

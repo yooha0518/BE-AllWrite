@@ -28,6 +28,10 @@ const CommentSchema = new Schema(
 					type: Number,
 					required: false,
 				},
+				profileImage: {
+					type: String,  // Assuming profileImage is of string type
+					required: true,
+				},
 			},
     ],
 	},
