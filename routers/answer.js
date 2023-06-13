@@ -6,7 +6,7 @@ const upload = require('../utils/upload.js');
 const { getUser } = require('../services/userService');
 
 //답변 등록
-answerRouter.post('/:questionId',getUserFromJwt, userController.addUserExp, answerController.createAnswer);
+answerRouter.post('/:questionId',getUserFromJwt, answerController.createAnswer, userController.addUserExp);
 
 //답변 전체 조회
 answerRouter.get('/all/:questionId', getUserFromJwt, answerController.getAnswerAll);

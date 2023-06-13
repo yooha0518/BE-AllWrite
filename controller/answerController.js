@@ -4,14 +4,13 @@ const { Answer } = require('../models/index');
 
 const AnswerController = {
   //답변 생성
-	async createAnswer(req, res) {
+	async createAnswer(req, res,next) {
 		try {
 			console.log('답변 만들기!');
 			const {nickName} = req.user;
 			const{questionId} = req.params;
 			const { content, stateCode } = req.body;
-			const reportCount = Answer.reportCount;
-			
+			const reportCount = 0;			
 			console.log(nickName, reportCount);
 			// const userId = req.currentUserId;
 			const createdAt = new Date();
@@ -19,9 +18,10 @@ const AnswerController = {
 				throw new Error("내용을 작성해주세요.");
 			}
 			const answer = await answerService.createAnswer({ nickName,questionId, content, reportCount, stateCode,  createdAt });
-			res
-        .status(201)
-        .json({ message: "답변이 작성되었습니다.", answer: answer });
+			// res
+      //   .status(201)
+      //   .json({ message: "답변이 작성되었습니다.", answer: answer });
+			next();
 		} catch (error) {
 			console.log(error);
 			return res
