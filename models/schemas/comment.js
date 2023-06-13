@@ -25,7 +25,11 @@ const CommentSchema = new Schema(
           default: Date.now,
         },
         reportCount: {
-					type: String,
+					type: Number,
+					required: false,
+				},
+				profileImage: {
+					type: String,  // Assuming profileImage is of string type
 					required: true,
 				},
 			},

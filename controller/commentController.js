@@ -7,13 +7,13 @@ const CommentController = {
 	async createComment(req, res) {
 		try {
 			console.log('댓글 생성!');
-      const {  nickName, profileImage } = req.user;
+      const {  nickName,profileImage } = req.user;
 			const { answerId } = req.params;
-      const { content, reportCount } = req.body;
+      const { content } = req.body;
 			
-			console.log(answerId, nickName,profileImage);
+			console.log(answerId, nickName);
 
-      const savedComment = await commentService.createComment({answerId, nickName,profileImage, content,reportCount});
+      const savedComment = await commentService.createComment({answerId, nickName, content,profileImage});
 
       res.status(201).json({message:"댓글을 생성했습니다.", savedComment:savedComment});
 		} catch (error) {
@@ -23,19 +23,33 @@ const CommentController = {
 				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
 		}
 	},
+	
+	async reportComment(req, res) {
+		try {
+			console.log("reportComment 실행")
+			const { answerId, commentId } = req.params;
+			// 답변 조회
+      const result = await commentService.reportComment(answerId,commentId);
+			res.status(200).json({ message: '댓글이 신고되었습니다.' });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
+		}
+	},
 
 	async getCommentByAnswerId(req, res) {
 		try {
 			const { answerId } = req.params;
-			console.log(answerId)
+			const {profileImage} =req.user;
+			console.log(answerId,profileImage)
       // db에서 모든 게시글 조회
-      const result = await commentService.getCommentByAnswerId(answerId);
+      const result = await commentService.getCommentByAnswerId(answerId,profileImage);
       res.status(200).json(result);
     } catch (error) {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
+				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
     }
 	},
   //전체 댓글 조회
