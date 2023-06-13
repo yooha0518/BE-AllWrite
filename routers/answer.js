@@ -1,12 +1,12 @@
 const { Router } = require('express');
-const { answerController } = require('../controller');
+const { answerController,userController } = require('../controller');
 const answerRouter = Router();
 const getUserFromJwt = require('../middlewares/getUserFromJwt');
 const upload = require('../utils/upload.js');
 const { getUser } = require('../services/userService');
 
 //답변 등록
-answerRouter.post('/:questionId',getUserFromJwt, answerController.createAnswer);
+answerRouter.post('/:questionId',getUserFromJwt, userController.addUserExp, answerController.createAnswer);
 
 //답변 전체 조회
 answerRouter.get('/all/:questionId', getUserFromJwt, answerController.getAnswerAll);
