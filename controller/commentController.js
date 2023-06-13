@@ -7,13 +7,13 @@ const CommentController = {
 	async createComment(req, res) {
 		try {
 			console.log('댓글 생성!');
-      const {  nickName } = req.user;
+      const {  nickName,profileImage } = req.user;
 			const { answerId } = req.params;
       const { content } = req.body;
 			
 			console.log(answerId, nickName);
 
-      const savedComment = await commentService.createComment({answerId, nickName, content});
+      const savedComment = await commentService.createComment({answerId, nickName, content,profileImage});
 
       res.status(201).json({message:"댓글을 생성했습니다.", savedComment:savedComment});
 		} catch (error) {
