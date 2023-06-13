@@ -25,7 +25,7 @@ const CommentSchema = new Schema(
           default: Date.now,
         },
         reportCount: {
-					type: String,
+					type: Number,
 					required: false,
 				},
 			},

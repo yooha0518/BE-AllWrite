@@ -36,14 +36,14 @@ const CommentService = {
       if (!comment) {
         return '댓글을 찾을 수 없습니다.';
       }
-  // 신고할 댓글 조회
-    const reportedComment = comment.comment.find((c) => c._id.toString() === commentId);
-    if (!reportedComment) {
-      return '댓글을 찾을 수 없습니다.';
+    // 신고할 댓글 조회
+    const targetComment = comment.comment.find((c) => c._id.toString() === commentId);
+
+    if (!targetComment) {
+      '해당 댓글을 찾을 수 없습니다.' ;
     }
-    // reportCount 증가
-    reportedComment.reportCount++;
-    // 저장
+
+    targetComment.reportCount += 1;
     return await comment.save();
 	},
   
