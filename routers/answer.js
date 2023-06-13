@@ -3,6 +3,7 @@ const { answerController } = require('../controller');
 const answerRouter = Router();
 const getUserFromJwt = require('../middlewares/getUserFromJwt');
 const upload = require('../utils/upload.js');
+const { getUser } = require('../services/userService');
 
 //답변 등록
 answerRouter.post('/:questionId',getUserFromJwt, answerController.createAnswer);
@@ -20,7 +21,7 @@ answerRouter.get('/friend/:questionId', getUserFromJwt, answerController.getFrie
 answerRouter.get('/detail/:questionId/:answerId', getUserFromJwt, answerController.getDetailAnswers);
 
 // //답변 신고
-// answerRouter.post()
+answerRouter.post('/complaint/:questionId/:answerId', getUserFromJwt, answerController.reportAnswer );
 
 
 //답변 수정

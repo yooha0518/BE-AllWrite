@@ -55,8 +55,9 @@ const AnswerService = {
 	async getAnswersByQuestionIdAll  (questionId) {
 		try {
 			const answers = await Answer.find({ questionId});
+			const reportCount = Answer.reportCount;
 			console.log(`질문 ID(${questionId})에 대한 모든 답변을 가져왔습니다.`);
-			return answers;
+			return {answers,reportCount};
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);
 			throw error;
@@ -76,6 +77,20 @@ const AnswerService = {
 			return answers;
 },
 
+
+	async reportAnswer(answerId) {
+
+		const answer = await  Answer.findById(answerId);
+
+		if (!answer) {
+			return '답변을 찾을 수 없습니다.';
+		}
+		// 신고 횟수 증가
+		answer.reportCount += 1;
+	
+		// 답변 저장
+		return await answer.save();
+	},
   //answerId를 사용해 답변 수정
   async updateAnswer(answerId, updateData) {
     const option = { new: true };

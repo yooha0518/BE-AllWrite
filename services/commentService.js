@@ -3,14 +3,17 @@ const { Comment, Answer, Like } = require('../models');
 
 const CommentService = {
 	// 댓글 생성
-	async createComment({answerId, nickName,profileImage, content, reportCount}) {
+	async createComment({answerId, nickName,profileImage, content}) {
     let comment = await Comment.findOne({ answerId:answerId });
+    // const reportCount = Comment.schema.paths['comment.reportCount'];
+    const reportCount = 0;
+  console.log(reportCount);
     const newComment = {
       nickName,
       content,
       createdAt: new Date(),
       updatedAt: new Date(),
-      reportCount: 0,
+      reportCount,
     };
     // console.log(newComment, answerId, nickName);
     if (!comment) {
@@ -27,18 +30,30 @@ const CommentService = {
       );
     }
 	},
+  async reportComment(answerId,commentId) {
+    // 댓글 조회
+    const comment = await Comment.findOne({ 'comment._id': commentId });
+      if (!comment) {
+        return '댓글을 찾을 수 없습니다.';
+      }
+    // 신고할 댓글 조회
+    const targetComment = comment.comment.find((c) => c._id.toString() === commentId);
+
+    if (!targetComment) {
+      '해당 댓글을 찾을 수 없습니다.' ;
+    }
+
+    targetComment.reportCount += 1;
+    return await comment.save();
+	},
   
-  async getCommentByAnswerId  (answerId) {
+  async getCommentByAnswerId (answerId) {
 		try {
 			const comments = await Comment.find({ answerId });
 
-      const likeCount = await Like.find({ answerId }).length;
-
-      console.log(likeCount);
-
 			console.log(`(${answerId})에 대한 댓글을 가져왔습니다.`);
       
-			return comments, likeCount;
+			return comments;
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);
 			throw error;
@@ -50,6 +65,7 @@ const CommentService = {
 		const comment = await Comment.findOne( {'comment._id': commentId} );
 		return comment;
 	},
+
   // 전체 댓글 조회
 	async getCommentAll() {
     const comment = await Comment.find();
