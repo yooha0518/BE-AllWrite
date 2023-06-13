@@ -23,6 +23,19 @@ const CommentController = {
 				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
 		}
 	},
+	
+	async reportComment(req, res) {
+		try {
+			console.log("reportComment 실행")
+			const { answerId, commentId } = req.params;
+			// 답변 조회
+      const result = await commentService.reportComment(answerId,commentId);
+			res.status(200).json({ message: '댓글이 신고되었습니다.' });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
+		}
+	},
 
 	async getCommentByAnswerId(req, res) {
 		try {
@@ -35,7 +48,7 @@ const CommentController = {
 			console.log(error);
 			return res
 				.status(500)
-				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
+				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
     }
 	},
   //전체 댓글 조회

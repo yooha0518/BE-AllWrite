@@ -83,7 +83,7 @@ const AnswerService = {
 		const answer = await  Answer.findById(answerId);
 
 		if (!answer) {
-			return res.status(404).json({ message: '답변을 찾을 수 없습니다.' });
+			return '답변을 찾을 수 없습니다.';
 		}
 		// 신고 횟수 증가
 		answer.reportCount += 1;

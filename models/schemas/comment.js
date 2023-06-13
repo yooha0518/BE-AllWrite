@@ -26,7 +26,7 @@ const CommentSchema = new Schema(
         },
         reportCount: {
 					type: String,
-					required: true,
+					required: false,
 				},
 			},
     ],
