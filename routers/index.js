@@ -9,6 +9,7 @@ const adminUserRouter = require("./adminUser");
 const adminFunctionRouter = require("./adminFunction");
 const friendRouter = require("./friend.js");
 const questionRouter = require("./question.js");
+const emotionRouter = require("./emotion.js");
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
 
 router.get("/", (req, res) => {
@@ -24,4 +25,5 @@ router.use("/question/answer", answerRouter);
 router.use("/question", questionRouter);
 router.use("/answer/comment", commentRouter);
 router.use("/answer/like", likeRouter);
+router.use("/emotion", emotionRouter);
 module.exports = router;

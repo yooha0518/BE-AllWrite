@@ -5,12 +5,13 @@ const questionController = require("./questionController");
 const commentController = require("./commentController");
 const likeController = require("./likeController");
 const friendController = require("./friendController");
+const emotionController = require("./emotionController.js");
 module.exports = {
-  userController,
-  adminController,
-  answerController,
-  questionController,
-  commentController,
-  likeController,
-  friendController,
-}
+	userController,
+	answerController,
+	questionController,
+	commentController,
+	likeController,
+	friendController,
+	emotionController,
+};
