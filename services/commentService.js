@@ -3,14 +3,17 @@ const { Comment, Answer, Like } = require('../models');
 
 const CommentService = {
 	// 댓글 생성
-	async createComment({answerId, nickName,profileImage, content, reportCount}) {
+	async createComment({answerId, nickName,profileImage, content}) {
     let comment = await Comment.findOne({ answerId:answerId });
+    // const reportCount = Comment.schema.paths['comment.reportCount'];
+    const reportCount = 0;
+  console.log(reportCount);
     const newComment = {
       nickName,
       content,
       createdAt: new Date(),
       updatedAt: new Date(),
-      reportCount: 0,
+      reportCount,
     };
     // console.log(newComment, answerId, nickName);
     if (!comment) {

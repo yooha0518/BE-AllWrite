@@ -9,11 +9,11 @@ const CommentController = {
 			console.log('댓글 생성!');
       const {  nickName, profileImage } = req.user;
 			const { answerId } = req.params;
-      const { content, reportCount } = req.body;
+      const { content } = req.body;
 			
 			console.log(answerId, nickName,profileImage);
 
-      const savedComment = await commentService.createComment({answerId, nickName,profileImage, content,reportCount});
+      const savedComment = await commentService.createComment({answerId, nickName,profileImage, content});
 
       res.status(201).json({message:"댓글을 생성했습니다.", savedComment:savedComment});
 		} catch (error) {
