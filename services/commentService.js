@@ -32,13 +32,9 @@ const CommentService = {
 		try {
 			const comments = await Comment.find({ answerId });
 
-      const likeCount = await Like.find({ answerId }).length;
-
-      console.log(likeCount);
-
 			console.log(`(${answerId})에 대한 댓글을 가져왔습니다.`);
       
-			return comments, likeCount;
+			return comments;
 		} catch (error) {
 			console.error('답변 가져오기 중 오류 발생:', error);
 			throw error;
