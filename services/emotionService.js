@@ -22,7 +22,7 @@ const emotionService = {
 	},
 	//감정 날짜별 조회
 	async getUserEmotion(email, date) {
-		const userEmotion = await Emotion.find({ email, date });
+		const userEmotion = await Emotion.findOne({ email, date });
 		return userEmotion;
 	},
 	//감정 생성
