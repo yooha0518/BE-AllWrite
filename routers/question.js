@@ -2,7 +2,8 @@ const { Router } = require("express");
 const { questionController } = require("../controller");
 const questionRouter = Router();
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
-const { authAdmin } = require('../middlewares/index');
+const { authAdmin } = require("../middlewares/index");
+
 
 //질문 전체 조회
 questionRouter.get("/all", questionController.getAllQuestion);
@@ -24,6 +25,5 @@ questionRouter.put("/:questionId", questionController.updateQuestion);
 
 //질문 삭제
 questionRouter.delete("/:questionId", questionController.deleteQuestion);
-
 
 module.exports = questionRouter;
