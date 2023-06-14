@@ -15,6 +15,21 @@ const emotionController = {
 				.json({ message: "서버의 emotionContrller에서 에러가 났습니다." });
 		}
 	},
+	//해당 날짜 감정 조회
+	async getDateEmotion(req, res) {
+		try {
+			const { email } = req.user;
+			const { date } = req.params;
+			console.log(email);
+			const emotion = await emotionService.getUserEmotion(email, date);
+			res.status(200).json(emotion);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 emotionContrller에서 에러가 났습니다." });
+		}
+	},
 	//감정 생성
 	async postEmotion(req, res) {
 		try {
@@ -23,7 +38,7 @@ const emotionController = {
 			const { date } = req.params;
 
 			const userEmotion = await emotionService.getUserEmotion(email, date);
-			if (userEmotion[0]) {
+			if (userEmotion) {
 				console.log("userEmotion이 있습니다 :", userEmotion);
 				const createTodayEmotion = await emotionService.updateEmotion(
 					email,
@@ -38,33 +53,6 @@ const emotionController = {
 				const result = await emotionService.createEmotion(email, emotion, date);
 				res.status(200).json({ message: "생성되었습니다. :", result: result });
 			}
-		} catch (error) {
-			console.log(error);
-			return res
-				.status(500)
-				.json({ message: "서버의 emotionContrller에서 에러가 났습니다." });
-		}
-	},
-	//감정 수정
-	async updateEmotion(req, res) {
-		try {
-			const { email } = req.user;
-			const { emotion } = req.body;
-
-			const userEmotion = await emotionService.getTodayUserEmotion(email);
-			console.log("userEmotion", userEmotion);
-			if (!userEmotion) {
-				const createTodayEmotion = await emotionService.createEmotion(
-					email,
-					emotion
-				);
-				res.status(200).json({
-					message: "업데이트 되었습니다.",
-					result: createTodayEmotion,
-				});
-			}
-			const result = await emotionService.updateEmotion(email, emotion);
-			res.status(200).json({ message: "업데이트 되었습니다.", result: result });
 		} catch (error) {
 			console.log(error);
 			return res
