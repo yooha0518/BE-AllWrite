@@ -20,10 +20,10 @@ const emotionService = {
 		const allEmotion = await Emotion.find({ email });
 		return allEmotion;
 	},
-	//감정 전체 조회
-	async getTodayUserEmotion(email) {
-		const allEmotion = await Emotion.find({ email, date: currentDate });
-		return allEmotion;
+	//감정 날짜별 조회
+	async getUserEmotion(email, date) {
+		const userEmotion = await Emotion.find({ email, date });
+		return userEmotion;
 	},
 	//감정 생성
 	async createEmotion(email, emotion, date) {
@@ -31,10 +31,9 @@ const emotionService = {
 		return createResult;
 	},
 	//감정 수정
-	async updateEmotion(email, emotion) {
-		console.log("currentDate:", currentDate);
+	async updateEmotion(email, emotion, date) {
 		const updateResult = await Emotion.updateOne(
-			{ email, date: currentDate },
+			{ email, date },
 			{
 				emotion,
 			}
@@ -42,8 +41,8 @@ const emotionService = {
 		return updateResult;
 	},
 	//감정 삭제
-	async deleteEmotion(email) {
-		const deleteResult = await Emotion.deleteOne({ email, date: currentDate });
+	async deleteEmotion(email, date) {
+		const deleteResult = await Emotion.deleteOne({ email, date });
 		return deleteResult;
 	},
 };
