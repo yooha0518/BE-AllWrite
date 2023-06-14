@@ -20,9 +20,14 @@ const emotionService = {
 		const allEmotion = await Emotion.find({ email });
 		return allEmotion;
 	},
+	//감정 전체 조회
+	async getTodayUserEmotion(email) {
+		const allEmotion = await Emotion.find({ email, date: currentDate });
+		return allEmotion;
+	},
 	//감정 생성
-	async createEmotion(email, emotion) {
-		const createResult = await Emotion.create({ email, emotion });
+	async createEmotion(email, emotion, date) {
+		const createResult = await Emotion.create({ email, emotion, date });
 		return createResult;
 	},
 	//감정 수정
