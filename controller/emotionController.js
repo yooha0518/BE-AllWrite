@@ -15,13 +15,14 @@ const emotionController = {
 				.json({ message: "서버의 emotionContrller에서 에러가 났습니다." });
 		}
 	},
-	//감정 생성
-	async createEmotion(req, res) {
+	//감정 생성 postEmotion
+	async postEmotion(req, res) {
 		try {
 			const { email } = req.user;
 			const { emotion } = req.body;
+			const { date } = req.params;
 			console.log("생성: ", email);
-			const result = await emotionService.createEmotion(email, emotion);
+			const result = await emotionService.createEmotion(email, emotion,date);
 			res.status(200).json({ message: "생성결과:", result: result });
 		} catch (error) {
 			console.log(error);
@@ -35,8 +36,21 @@ const emotionController = {
 		try {
 			const { email } = req.user;
 			const { emotion } = req.body;
+
+			const userEmotion = await emotionService.getTodayUserEmotion(email);
+			console.log("userEmotion", userEmotion);
+			if (!userEmotion) {
+				const createTodayEmotion = await emotionService.createEmotion(
+					email,
+					emotion
+				);
+				res.status(200).json({
+					message: "업데이트 되었습니다.",
+					result: createTodayEmotion,
+				});
+			}
 			const result = await emotionService.updateEmotion(email, emotion);
-			res.status(200).json({ message: "수정 결과:", result: result });
+			res.status(200).json({ message: "업데이트 되었습니다.", result: result });
 		} catch (error) {
 			console.log(error);
 			return res

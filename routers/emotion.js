@@ -6,8 +6,8 @@ const getUserFromJwt = require("../middlewares/getUserFromJwt");
 //감정 전체 조회
 emotionRouter.get("/", getUserFromJwt, emotionController.getAllemotion);
 
-//감정 수정
-emotionRouter.post("/", getUserFromJwt, emotionController.createEmotion);
+//해당 날짜 감정 생성
+emotionRouter.post("/:date", getUserFromJwt, emotionController.postEmotion);
 
 //감정 수정
 emotionRouter.put("/", getUserFromJwt, emotionController.updateEmotion);
