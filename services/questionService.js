@@ -42,8 +42,22 @@ const questionService = {
 	//해당 날짜 질문 3개 조회
 	async getDateQuestion(date) {
 		let question = await Question.find({ date: date });
-		console.log("question", question);
+		console.log("오늘의 질문 :", question);
 
+		const questionLength = question.length;
+		if (questionLength < 3) {
+			console.log("이 날짜의 질문이 등록되지 않았습니다. 질문을 등록합니다.");
+			for (let i = 0; i < 3 - questionLength; i++) {
+				await Question.findOneAndUpdate(
+					{ date: null },
+					{
+						date: date,
+					}
+				);
+				question = await Question.find({ date: date });
+			}
+			console.log("등록후 오늘의 질문 :", question);
+		}
 		return question;
 	},
 	//질문 날짜 초기화
