@@ -16,7 +16,6 @@ let currentDate = year + "-" + month + "-" + day;
 const EmotionSchema = new Schema({
 	email: {
 		type: String,
-		unique: true,
 	},
 	emotion: {
 		type: String,
