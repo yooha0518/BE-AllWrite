@@ -21,10 +21,9 @@ const emotionController = {
 			const { email } = req.user;
 			const { emotion } = req.body;
 			const { date } = req.params;
-			console.log("생성: ", email);
 
 			const userEmotion = await emotionService.getUserEmotion(email, date);
-			if (userEmotion) {
+			if (userEmotion[0]) {
 				console.log("userEmotion이 있습니다 :", userEmotion);
 				const createTodayEmotion = await emotionService.updateEmotion(
 					email,
