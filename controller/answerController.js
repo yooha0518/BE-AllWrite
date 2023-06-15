@@ -11,13 +11,14 @@ const AnswerController = {
 			const{questionId} = req.params;
 			const { content, stateCode } = req.body;
 			const reportCount = 0;			
-			console.log(nickName, reportCount);
+			
 			// const userId = req.currentUserId;
 			const createdAt = new Date();
 			if(!content){
 				throw new Error("내용을 작성해주세요.");
 			}
 			const profileImage = await answerService.getProfileImage(nickName);
+			console.log(nickName, profileImage);
 			const answer = await answerService.createAnswer({ nickName,questionId, content, reportCount, stateCode,  createdAt ,profileImage});
 			// res
       //   .status(201)
@@ -91,7 +92,7 @@ const AnswerController = {
 			};
 			const isWriteAnswer = checkIfContainsName(result, nickName);
 			console.log(isWriteAnswer);
-      res.status(200).json({isWriteAnswer,result,img});
+      res.status(200).json({isWriteAnswer,result});
     } catch (error) {
 			console.log(error);
 			return res
@@ -144,13 +145,13 @@ const AnswerController = {
 			console.log("nickName : ", nickName);
 
 			// const answers = await answerService.getFriendsFriendPublicAnswers(nickName);
-			const friendOfFriendAnswers = await answerService.getFriendOfFriendAnswers(questionId,nickName,email);// 내 친구들의 친구 공개 글 가져옴
+			const answers = await answerService.getFriendOfFriendAnswers(questionId,nickName,email);// 내 친구들의 친구 공개 글 가져옴
 
 			const getPublicAnswer = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
       const getPrivateanswers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
       const isWriteAnswer = checkIfMyNicknameExists(getPublicAnswer, getPrivateanswers, nickName);
 
-      res.json({ isWriteAnswer, friendOfFriendAnswers }); // 조회된 글을 JSON 형태로 응답합니다.
+      res.json({ isWriteAnswer, answers }); // 조회된 글을 JSON 형태로 응답합니다.
     } catch (error) {
       res.status(500).json({ error: "answerController에서 에러났음" }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
     }
