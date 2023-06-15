@@ -70,13 +70,26 @@ const AnswerController = {
 
 
 	async getAnswersByQuestionId(req, res) {
+		
 		try {
+			console.log("getAnswersByQuestionId 실행!")
 			const { questionId } = req.params;
+			const{nickName} = req.user;
 			console.log('questionId로 답변 조회');
-			console.log(questionId)
+			console.log(questionId);
+
       // db에서 모든 게시글 조회
       const result = await answerService.getAnswersByQuestionId(questionId);
-      res.status(200).json(result);
+
+			function checkIfContainsName(arr, nickName) {
+				return arr.some(isWrite);
+			}
+			function isWrite ( result ) {
+				if(result.nickName === nickName){return true;} return false;
+			};
+			const isWriteAnswer = checkIfContainsName(result, nickName);
+			console.log(isWriteAnswer);
+      res.status(200).json({isWriteAnswer,result});
     } catch (error) {
 			console.log(error);
 			return res
@@ -91,7 +104,9 @@ const AnswerController = {
       // db에서 모든 게시글 조회
 
 			const { questionId } = req.params;
+			const {nickName} = req.user;
       const result = await answerService.getAnswersByQuestionIdAll(questionId);
+			
       res.status(200).json(result);
     } catch (error) {
 			console.log(error);
@@ -100,10 +115,19 @@ const AnswerController = {
 				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
     }
 	},
-
+	// 전체공개 글 조회
 	async getPublicAnswers(req, res) {
 		try {
-			const answers = await answerService.getPublicAnswers(); // 전체 공개 게시글을 서비스에서 조회합니다.
+			const {questionId} = req.params; 
+			const {nickName} = req.user;
+			const answers = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
+			function checkIfContainsName(arr, nickName) {
+				return arr.some(isWrite);
+			}
+			function isWrite ( answers ) {
+				if(answers.nickName === nickName){return true;} return false;
+			};
+			console.log(checkIfContainsName(answers, nickName));
 			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
@@ -113,6 +137,7 @@ const AnswerController = {
 	// 친구 공개 게시글을 조회하는 컨트롤러 함수
 	async getFriendAnswers(req, res) {
 		try {
+			console.log("친구공개글")
 			const {questionId} = req.params; 
 			const answers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
 			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
