@@ -31,7 +31,7 @@ const CommentService = {
       );
     }
 	},
-  async reportComment(answerId,commentId) {
+  async reportComment(answerId,commentId,profileImage) {
     // 댓글 조회
     const comment = await Comment.findOne({ 'comment._id': commentId });
       if (!comment) {
