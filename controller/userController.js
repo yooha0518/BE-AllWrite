@@ -153,7 +153,7 @@ const userController = {
 	},
 	async deleteProfileImate(req, res) {
 		try {
-			console.log('프로필사진 수정 시작');
+			console.log("프로필사진 수정 시작");
 			const { email } = req.user;
 			const profileImage = `http://allwrite.kro.kr:5000/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
@@ -326,21 +326,21 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
-	async adminsendEmail(req, res) {
+	async sendEmail(req, res) {
 		try {
 			console.log("adminsendEmail 실행");
-			const { email } = req.body;
-			const user = await userService.getUserFromEmail(email);
+			const { nickName } = req.body;
+			const user = await userService.getUserFromNickName(nickName);
 			await sendMail(
-				email,
+				user.email,
 				`All Write 경고`,
-				`${user.nickName}님이 작성하신 글이 신고접수 되었습니다. `,
+				`${nickName}님이 작성하신 글이 신고접수 되었습니다. `,
 				`신고 접수가 누적될경우, 예고없이 강제 탈퇴될 수 있습니다.`,
 				4
 			);
 			res
 				.status(200)
-				.json({ message: `${email}으로 경고메일을 전송했습니다.` });
+				.json({ message: `${user.email}으로 경고메일을 전송했습니다.` });
 		} catch (error) {
 			console.log(error);
 			return res
