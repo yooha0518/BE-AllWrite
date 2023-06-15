@@ -139,7 +139,7 @@ const userController = {
 	async adminPutProfileImage(req, res) {
 		try {
 			const { email } = req.params;
-			const profileImage = `http://allwrite.kro.kr:5000/image/defaultImage.png`;
+			const profileImage = `https://allwrite.kro.kr/image/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 수정되었습니다.",
