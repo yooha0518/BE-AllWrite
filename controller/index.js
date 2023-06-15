@@ -6,6 +6,7 @@ const commentController = require("./commentController");
 const likeController = require("./likeController");
 const friendController = require("./friendController");
 const emotionController = require("./emotionController.js");
+const mypageController = require("./mypageController.js");
 module.exports = {
 	userController,
 	answerController,
@@ -15,4 +16,5 @@ module.exports = {
 	friendController,
 	emotionController,
 	adminController,
+	mypageController,
 };

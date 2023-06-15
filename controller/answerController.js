@@ -17,7 +17,8 @@ const AnswerController = {
 			if(!content){
 				throw new Error("내용을 작성해주세요.");
 			}
-			const answer = await answerService.createAnswer({ nickName,questionId, content, reportCount, stateCode,  createdAt });
+			const profileImage = await answerService.getProfileImage(nickName);
+			const answer = await answerService.createAnswer({ nickName,questionId, content, reportCount, stateCode,  createdAt ,profileImage});
 			// res
       //   .status(201)
       //   .json({ message: "답변이 작성되었습니다.", answer: answer });
@@ -80,7 +81,8 @@ const AnswerController = {
 
       // db에서 모든 게시글 조회
       const result = await answerService.getAnswersByQuestionId(questionId);
-
+			const img = await answerService.getProfileImage(nickName);
+			console.log("img",img)
 			function checkIfContainsName(arr, nickName) {
 				return arr.some(isWrite);
 			}
@@ -89,7 +91,7 @@ const AnswerController = {
 			};
 			const isWriteAnswer = checkIfContainsName(result, nickName);
 			console.log(isWriteAnswer);
-      res.status(200).json({isWriteAnswer,result});
+      res.status(200).json({isWriteAnswer,result,img});
     } catch (error) {
 			console.log(error);
 			return res
