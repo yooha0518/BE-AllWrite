@@ -4,9 +4,8 @@ const emotionController = {
 	//감정 전체 조회
 	async getAllEmotion(req, res) {
 		try {
-			const { email } = req.user;
-			console.log(email);
-			const emotionList = await emotionService.getAllEmotion(email);
+			const { nickName } = req.params;
+			const emotionList = await emotionService.getAllEmotion(nickName);
 			res.status(200).json(emotionList);
 		} catch (error) {
 			console.log(error);
