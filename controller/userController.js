@@ -123,7 +123,23 @@ const userController = {
 	async putProfileImage(req, res) {
 		try {
 			const { email } = req.user;
-			const profileImage = `http://allwrite.kro.kr:5000/${req.file.filename}`;
+			const profileImage = `http://allwrite.kro.kr:5000/image/${req.file.filename}`;
+			const result = await userService.updateProfileImage(email, profileImage);
+			res.status(200).json({
+				message: "이미지가 수정되었습니다.",
+				result: result,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
+	},
+	async adminPutProfileImage(req, res) {
+		try {
+			const { email } = req.params;
+			const profileImage = `http://allwrite.kro.kr:5000/image/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 수정되었습니다.",
@@ -272,7 +288,7 @@ const userController = {
 	async adminGetUserlist(req, res) {
 		try {
 			const page = Number(req.query.page || 1);
-			const userlist = await userService.adminReadUser(page);
+			const userlist = await userService.adminReadUser();
 			res.json(userlist);
 		} catch (error) {
 			console.log(error);
