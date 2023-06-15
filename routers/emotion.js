@@ -4,7 +4,7 @@ const emotionRouter = Router();
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
 
 //감정 전체 조회
-emotionRouter.get("/:nickName", getUserFromJwt, emotionController.getAllEmotion);
+emotionRouter.get("/", getUserFromJwt, emotionController.getAllEmotion);
 
 //해당 날짜 감정  조회
 emotionRouter.get("/:date", getUserFromJwt, emotionController.getDateEmotion);

@@ -16,10 +16,8 @@ let currentDate = year + "-" + month + "-" + day;
 
 const emotionService = {
 	//감정 전체 조회
-	async getAllEmotion(nickName) {
-		const user = await User.findOne({ nickName });
-		console.log("user: ", user);
-		const allEmotion = await Emotion.find({ email: user.email });
+	async getAllEmotion(email) {
+		const allEmotion = await Emotion.find({ email });
 		return allEmotion;
 	},
 	//감정 날짜별 조회
