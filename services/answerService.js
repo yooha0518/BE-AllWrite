@@ -1,4 +1,4 @@
-const { Answer,Like,Comment,User } = require('../models');
+const { Answer,Like,Comment,User,Friend } = require('../models');
 
 
 const AnswerService = {
@@ -87,7 +87,7 @@ const AnswerService = {
 			console.log(`질문 ID(${questionId})에 대한 전체공개 답변을 가져왔습니다.`);
 			return answers;
 			// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
-},
+	},
 
 	// 친구 공개 게시글을 조회하는 함수
 	async  getFriendAnswers(questionId) {
@@ -96,7 +96,25 @@ const AnswerService = {
 			console.log(`질문 ID(${questionId})에 대한 친구공개 답변을 가져왔습니다.`);
 			return answers;
 			// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
-},
+	},
+
+	async getFriendOfFriendAnswers (questionId, nickName,email){
+		const friend = await Friend.findOne({email, nickName} );
+		console.log("내 닉네임 =", nickName);
+		console.log("내 친구들 =",friend);
+		
+		if (!friend) {
+			throw new Error('친구 정보를 찾을 수 없습니다.');
+		}
+		
+		const friendNicknames = friend.friends.map(friend => friend.nickName);
+		
+		const friendOfFriendAnswers = await Answer.find({ questionId,nickName: { $in: friendNicknames }, stateCode: false && true });
+		
+		return friendOfFriendAnswers;
+	},
+
+
 
 
 	async reportAnswer(answerId) {
