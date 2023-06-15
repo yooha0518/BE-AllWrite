@@ -28,8 +28,9 @@ const CommentController = {
 		try {
 			console.log("reportComment 실행")
 			const { answerId, commentId } = req.params;
+			const {profileImage} = req.user;
 			// 답변 조회
-      const result = await commentService.reportComment(answerId,commentId);
+      const result = await commentService.reportComment(answerId,commentId,profileImage);
 			res.status(200).json({ message: '댓글이 신고되었습니다.' });
 		} catch (error) {
 			console.error(error);
