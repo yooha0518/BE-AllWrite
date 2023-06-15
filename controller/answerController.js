@@ -117,49 +117,37 @@ const AnswerController = {
 				.json({ message: '서버의 answerContrller에서 에러가 났습니다.' });
     }
 	},
-	// 전체공개 글 조회
-	async getPublicAnswers(req, res) {
-		try {
-			const {questionId} = req.params; 
-			const {nickName} = req.user;
-			const answers = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
-			function checkIfContainsName(arr, nickName) {
-				return arr.some(isWrite);
-			}
-			function isWrite ( answers ) {
-				if(answers.nickName === nickName){return true;} return false;
-			};
-			const isWriteAnswer = checkIfContainsName(answers, nickName);
-			console.log(isWriteAnswer);
 
-			res.json({isWriteAnswer,answers}); // 조회된 글을 JSON 형태로 응답합니다.
-		} catch (error) {
-			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
-		}
-	},
-	
-	// 친구 공개 게시글을 조회하는 컨트롤러 함수
-	async getFriendAnswers(req, res) {
-		try {
-			console.log("친구공개글")
-			const {questionId} = req.params; 
-			const {nickName} = req.user;
-			const answers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
-			function checkIfContainsName(arr, nickName) {
-				return arr.some(isWrite);
-			}
-			function isWrite ( answers ) {
-				if(answers.nickName === nickName){return true;} return false;
-			};
-			const isWriteAnswer = checkIfContainsName(answers, nickName);
-			console.log(isWriteAnswer);
+	// 전체 공개 글 조회
+  async getPublicAnswers(req, res) {
+    try {
+      const { questionId } = req.params;
+      const { nickName } = req.user;
+      const answers = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
+			const getPrivateAnswer = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
+      const isWriteAnswer = checkIfMyNicknameExists(answers, getPrivateAnswer, nickName);
 
-			res.json({isWriteAnswer,answers}); // 조회된 글을 JSON 형태로 응답합니다.
-		} catch (error) {
-			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
-		}
-	},
+      res.json({ isWriteAnswer, answers }); // 조회된 글을 JSON 형태로 응답합니다.
+    } catch (error) {
+      res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+    }
+  },
 
+  // 친구 공개 게시글을 조회하는 컨트롤러 함수
+  async getFriendAnswers(req, res) {
+    try {
+      console.log('친구공개글');
+      const { questionId } = req.params;
+      const { nickName } = req.user;
+			const getPublicAnswer = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
+      const answers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
+      const isWriteAnswer = checkIfMyNicknameExists(getPublicAnswer, answers, nickName);
+
+      res.json({ isWriteAnswer, answers }); // 조회된 글을 JSON 형태로 응답합니다.
+    } catch (error) {
+      res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+    }
+  },
 
 	async putAnswer(req, res) {
 		try {
@@ -223,5 +211,17 @@ const AnswerController = {
 		}
 	},
 };
+// 전체 공개 답변과 친구 공개 답변 중에서 해당 사용자가 답변을 작성했는지 확인하는 함수
+function checkIfAnswered(answers, nickName) {
+  return answers.some((answer) => answer.nickName === nickName);
+}
+// 전체 공개 답변과 친구 공개 답변 중에서 나의 닉네임이 있는지 확인하는 함수
+function checkIfMyNicknameExists(publicAnswers, friendAnswers, myNickname) {
+  const hasPublicAnswer = publicAnswers.some((answer) => answer.nickName === myNickname);
+  const hasFriendAnswer = friendAnswers.some((answer) => answer.nickName === myNickname);
+
+  return hasPublicAnswer || hasFriendAnswer || (hasPublicAnswer && hasFriendAnswer);
+}
+
 
 module.exports = AnswerController;
