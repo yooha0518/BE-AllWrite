@@ -65,8 +65,8 @@ const AnswerService = {
 	},
 
 	async getProfileImage (nickName) {
-		const user = await User.findOne(this.nickName);
-		return user ? user.profileImage : null;
+		const user = await User.findOne({nickName});
+		return user.profileImage;
 	},
 
 	async getAnswersByQuestionIdAll  (questionId) {
