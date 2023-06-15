@@ -30,7 +30,7 @@ const CommentSchema = new Schema(
 				},
 				profileImage: {
 					type: String,  // Assuming profileImage is of string type
-					required: true,
+					required: false,
 				},
 			},
     ],
