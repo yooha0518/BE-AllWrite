@@ -1,5 +1,5 @@
 const { answerService } = require('../services');
-const { Answer } = require('../models/index');
+const { Answer, User } = require('../models/index');
 
 
 const AnswerController = {
@@ -138,14 +138,21 @@ const AnswerController = {
     try {
       console.log('친구공개글');
       const { questionId } = req.params;
-      const { nickName } = req.user;
-			const getPublicAnswer = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
-      const answers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
-      const isWriteAnswer = checkIfMyNicknameExists(getPublicAnswer, answers, nickName);
+      const { nickName, email } = req.user;
 
-      res.json({ isWriteAnswer, answers }); // 조회된 글을 JSON 형태로 응답합니다.
+			console.log("questionId : ", questionId);
+			console.log("nickName : ", nickName);
+
+			// const answers = await answerService.getFriendsFriendPublicAnswers(nickName);
+			const friendOfFriendAnswers = await answerService.getFriendOfFriendAnswers(questionId,nickName,email);// 내 친구들의 친구 공개 글 가져옴
+
+			const getPublicAnswer = await answerService.getPublicAnswers(questionId); // 전체 공개 게시글을 서비스에서 조회합니다.
+      const getPrivateanswers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
+      const isWriteAnswer = checkIfMyNicknameExists(getPublicAnswer, getPrivateanswers, nickName);
+
+      res.json({ isWriteAnswer, friendOfFriendAnswers }); // 조회된 글을 JSON 형태로 응답합니다.
     } catch (error) {
-      res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+      res.status(500).json({ error: "answerController에서 에러났음" }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
     }
   },
 
