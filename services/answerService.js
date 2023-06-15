@@ -99,7 +99,7 @@ const AnswerService = {
 	},
 
 	async getFriendOfFriendAnswers (questionId, nickName,email){
-		const friend = await Friend.findOne({email, nickName} );
+		const friend = await Friend.findOne({email, nickName});
 		console.log("내 닉네임 =", nickName);
 		console.log("내 친구들 =",friend);
 		
