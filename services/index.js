@@ -6,6 +6,7 @@ const adminService = require("./adminService");
 const likeService = require("./likeService");
 const friendService = require("./friendService");
 const emotionService = require("./emotionService");
+const mypageService = require("./mypageService.js");
 
 module.exports = {
 	userService,
@@ -16,4 +17,5 @@ module.exports = {
 	likeService,
 	friendService,
 	emotionService,
+	mypageService,
 };

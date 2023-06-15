@@ -17,7 +17,8 @@ const AnswerController = {
 			if(!content){
 				throw new Error("내용을 작성해주세요.");
 			}
-			const answer = await answerService.createAnswer({ nickName,questionId, content, reportCount, stateCode,  createdAt });
+			const profileImage = await answerService.getProfileImage(nickName);
+			const answer = await answerService.createAnswer({ nickName,questionId, content, reportCount, stateCode,  createdAt ,profileImage});
 			// res
       //   .status(201)
       //   .json({ message: "답변이 작성되었습니다.", answer: answer });
@@ -80,7 +81,8 @@ const AnswerController = {
 
       // db에서 모든 게시글 조회
       const result = await answerService.getAnswersByQuestionId(questionId);
-
+			const img = await answerService.getProfileImage(nickName);
+			console.log("img",img)
 			function checkIfContainsName(arr, nickName) {
 				return arr.some(isWrite);
 			}
@@ -89,7 +91,7 @@ const AnswerController = {
 			};
 			const isWriteAnswer = checkIfContainsName(result, nickName);
 			console.log(isWriteAnswer);
-      res.status(200).json({isWriteAnswer,result});
+      res.status(200).json({isWriteAnswer,result,img});
     } catch (error) {
 			console.log(error);
 			return res
@@ -127,8 +129,10 @@ const AnswerController = {
 			function isWrite ( answers ) {
 				if(answers.nickName === nickName){return true;} return false;
 			};
-			console.log(checkIfContainsName(answers, nickName));
-			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+			const isWriteAnswer = checkIfContainsName(answers, nickName);
+			console.log(isWriteAnswer);
+
+			res.json({isWriteAnswer,answers}); // 조회된 글을 JSON 형태로 응답합니다.
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
 		}

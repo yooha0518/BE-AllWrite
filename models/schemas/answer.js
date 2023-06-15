@@ -29,7 +29,11 @@ const AnswerSchema = new Schema(
       reportCount:{
         type:Number,
         required : true,
-      }
+      },
+      profileImage: {
+        type: String,  // Assuming profileImage is of string type
+        required: false,
+      },
 	},
 	{ timestamps: false }
 );

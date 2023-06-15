@@ -7,7 +7,7 @@ const CommentController = {
 	async createComment(req, res) {
 		try {
 			console.log('댓글 생성!');
-      const {  nickName,profileImage } = req.user;
+      const {  nickName, profileImage } = req.user;
 			const { answerId } = req.params;
       const { content } = req.body;
 			

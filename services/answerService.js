@@ -1,4 +1,4 @@
-const { Answer,Like,Comment } = require('../models');
+const { Answer,Like,Comment,User } = require('../models');
 
 
 const AnswerService = {
@@ -7,19 +7,21 @@ const AnswerService = {
 	// 	const createdAnswer = await Answer.create(,{ content,reportCount,stateCode,  createdAt });
 	// 	return createdAnswer;
 	// },
-	async createAnswer( { nickName,questionId, content,reportCount,stateCode,  createdAt }) {
-    const newAnswer = new Answer({
-			questionId,
+	async createAnswer( { nickName,questionId, content,reportCount,stateCode,  createdAt ,profileImage}) {	
+    const newAnswer = Answer.create({
+				questionId,
         nickName,
         content,
 				stateCode,
         createdAt: new Date(),
         updatedAt: new Date(),
         reportCount: 0,
-    });
+				profileImage,
+    }
+		);
 
-    const savedAsnwer = await newAnswer.save();
-    return savedAsnwer;
+    // const savedAsnwer = await newAnswer.save();
+    return newAnswer;
 	},
 	
 	async getDetailAnswers (questionId, answerId,nickName) {
@@ -60,6 +62,11 @@ const AnswerService = {
 			console.error('답변 가져오기 중 오류 발생:', error);
 			throw error;
 		}
+	},
+
+	async getProfileImage (nickName) {
+		const user = await User.findOne(this.nickName);
+		return user ? user.profileImage : null;
 	},
 
 	async getAnswersByQuestionIdAll  (questionId) {
