@@ -170,10 +170,9 @@ const AnswerController = {
 			console.log('검색 답변 삭제');
 		// req.params에서 게시글id 가져옴
 		const answerId = req.params.answerId;
-		const answer = await answerService.getAnswer(answerId);
 
 		// 해당 id의 게시글 db에서 삭제
-		const deletedAnswer = await answerService.deleteAnswer(answer);
+		const deletedAnswer = await answerService.deleteAnswer(answerId);
 
 		// 삭제
 		res.send(deletedAnswer);			
