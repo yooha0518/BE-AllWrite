@@ -60,6 +60,10 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res) => {
+	console.log("req.url", req.url);
+	console.log("req.method", req.method);
+	console.log("req.params", req.params);
+	console.log("req.query", req.query);
 	throw createError(404);
 });
 
