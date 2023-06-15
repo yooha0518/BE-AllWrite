@@ -129,8 +129,10 @@ const AnswerController = {
 			function isWrite ( answers ) {
 				if(answers.nickName === nickName){return true;} return false;
 			};
-			console.log(checkIfContainsName(answers, nickName));
-			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+			const isWriteAnswer = checkIfContainsName(answers, nickName);
+			console.log(isWriteAnswer);
+
+			res.json({isWriteAnswer,answers}); // 조회된 글을 JSON 형태로 응답합니다.
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
 		}
