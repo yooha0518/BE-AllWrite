@@ -8,7 +8,6 @@ const AnswerService = {
 	// 	return createdAnswer;
 	// },
 	async createAnswer( { nickName,questionId, content,reportCount,stateCode,  createdAt ,profileImage}) {	
-		console.log("img??", profileImage);
     const newAnswer = Answer.create({
 				questionId,
         nickName,
