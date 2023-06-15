@@ -41,6 +41,16 @@ const AnswerService = {
 		}
 	},
 
+	async getAnswer (answerId) {
+		try {
+			const answers = await Answer.find({ answerId});
+			return answers;
+		} catch (error) {
+			console.error('답변 가져오기 중 오류 발생:', error);
+			throw error;
+		}
+	},
+
 	async getAnswersByQuestionId  (questionId) {
 		try {
 			const answers = await Answer.find({ questionId,stateCode: true });
