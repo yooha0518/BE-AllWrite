@@ -139,8 +139,18 @@ const AnswerController = {
 		try {
 			console.log("친구공개글")
 			const {questionId} = req.params; 
+			const {nickName} = req.user;
 			const answers = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
-			res.json(answers); // 조회된 글을 JSON 형태로 응답합니다.
+			function checkIfContainsName(arr, nickName) {
+				return arr.some(isWrite);
+			}
+			function isWrite ( answers ) {
+				if(answers.nickName === nickName){return true;} return false;
+			};
+			const isWriteAnswer = checkIfContainsName(answers, nickName);
+			console.log(isWriteAnswer);
+
+			res.json({isWriteAnswer,answers}); // 조회된 글을 JSON 형태로 응답합니다.
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
 		}
