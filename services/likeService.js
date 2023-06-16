@@ -8,7 +8,7 @@ const likeService = {
     let like = await Like.findOne({ answerId });
 
     if (!like) {
-      like = await Like.create({
+      await Like.create({
         answerId,
         like: [{ nickName }],
       });
