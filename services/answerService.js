@@ -90,12 +90,17 @@ const AnswerService = {
 			}
 			friends.friends.push({ nickName: other.nickName });
 
-			for (let i = 0; i < friends.friends.length; i++) {
-				if (friends.friends[i].nickName === user.nickName) {
-					return { answerId: answer._id, message: "" };
+			//해당 답변이 친구 공개일경우
+			if (("answer.stateCode", answer.stateCode === false)) {
+				for (let i = 0; i < friends.friends.length; i++) {
+					if (friends.friends[i].nickName === user.nickName) {
+						return { answerId: answer._id, message: "" };
+					}
 				}
+				return { message: "친구 권한이 없습니다." };
+			} else { //전체 공개일경우 
+				return { answerId: answer._id, message: "" };
 			}
-			return { message: "친구 권한이 없습니다." };
 		} catch (error) {
 			console.error("답변 가져오기 중 오류 발생:", error);
 			throw error;
