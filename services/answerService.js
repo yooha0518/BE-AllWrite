@@ -45,7 +45,7 @@ const AnswerService = {
 			if (like && like.like) {
 				isLiked = like.like.some((item) => item.nickName === nickName);
 			}
-			
+
 			console.log("좋아요 눌렀나?", isLiked);
 			const comments = await Comment.find({ answerId });
 			console.log(`질문 ID(${answerId})에 대한 답변 상세를 가져왔습니다.`);
@@ -83,13 +83,16 @@ const AnswerService = {
 			const user = await User.findOne({ email }); //나
 			const other = await User.findOne({ nickName }); //검색한 유저
 			const friends = await Friend.findOne({ email: other.email }); //nickName의 친구들
-			const answers = await Answer.findOne({ questionId, nickName }); //해당 답변에 작성한 해당 유저의 답변
+			const answer = await Answer.findOne({ questionId, nickName }); //해당 답변에 작성한 해당 유저의 답변
 
+			if (!answer) {
+				return { message: "답변을 작성하지 않았습니다." };
+			}
 			friends.friends.push({ nickName: other.nickName });
 
 			for (let i = 0; i < friends.friends.length; i++) {
 				if (friends.friends[i].nickName === user.nickName) {
-					return answers;
+					return { answerId: answer._id, message: "" };
 				}
 			}
 			return { message: "친구 권한이 없습니다." };
