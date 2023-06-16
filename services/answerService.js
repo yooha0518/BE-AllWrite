@@ -124,9 +124,13 @@ const AnswerService = {
 		}
 	},
 	// 전체 공개 게시글을 조회하는 함수
-	async getPublicAnswers(questionId) {
+	async getPublicAnswers(questionId, skip, limit) {
 		// const answers = await Answer.find({ stateCode: false })
-		const answers = await Answer.find({ questionId, stateCode: true });
+		const answers = await Answer.find({ questionId, stateCode: true })
+		.sort({ createdAt : -1 })
+		.skip(skip)
+		.limit(limit);
+		
 		console.log(`질문 ID(${questionId})에 대한 전체공개 답변을 가져왔습니다.`);
 		return answers;
 		// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
@@ -141,7 +145,7 @@ const AnswerService = {
 		// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
 	},
 
-	async getFriendOfFriendAnswers(questionId, nickName, email) {
+	async getFriendOfFriendAnswers(questionId, nickName, email, limit, skip) {
 		const friend = await Friend.findOne({ email, nickName });
 		console.log("내 닉네임 =", nickName);
 		console.log("내 친구들 =", friend);
@@ -158,8 +162,10 @@ const AnswerService = {
 			questionId,
 			nickName: { $in: friendNicknames },
 			stateCode: false && true,
-		});
-
+		})
+		.sort({ createdAt : -1 })
+		.skip(skip)
+		.limit(limit);
 		return friendOfFriendAnswers;
 	},
 
