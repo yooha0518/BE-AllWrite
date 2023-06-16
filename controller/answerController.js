@@ -1,4 +1,4 @@
-const { answerService } = require("../services");
+const { answerService, userService, friendService } = require("../services");
 const { Answer, User } = require("../models/index");
 
 const AnswerController = {
@@ -156,6 +156,52 @@ const AnswerController = {
 			);
 
 			res.json({ isWriteAnswer, answers, answerCount }); // 조회된 글을 JSON 형태로 응답합니다.
+		} catch (error) {
+			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
+		}
+	},
+	//해당 유저의 답변 전체 조회
+	async getAnswersFromNickName(req, res) {
+		try {
+			const { email } = req.user;
+			const { nickName } = req.params;
+
+			//나(email)
+			const user = await userService.getUserFromEmail(email);
+
+			//해당 유저(nickName)
+			const other = await userService.getUserFromNickName(nickName);
+
+			console.log("user.nickName", user.nickName);
+			console.log("other.nickName", other.nickName);
+			if (user.nickName === other.nickName) {
+				// 내 답변 전체 가져오기
+				console.log("자신의 답변은 모두 확인할 수 있습니다!");
+				const answer = await answerService.getAllAnswerFromNickName(nickName);
+				return res.json(answer);
+			}
+
+			//해당 유저와 나의 관계 조회
+			const friendRelation = await friendService.getRelationFriend(
+				email,
+				nickName
+			);
+			console.log("해당 유저와 나의 관계: ", friendRelation.isFriend);
+			if (friendRelation.isFriend === true) {
+				//해당 유저의 모든 답변 가져오기
+				console.log("해당 유저의 모든 답변 가져오기!");
+				const answer = await answerService.getAllAnswerFromNickName(
+					other.nickName
+				);
+				return res.json(answer);
+			} else {
+				//해당 유저의 전체공개답변 가져오기
+				console.log("해당 유저의 전체공개답변만! 가져오기");
+				const anyoneAnswer = await answerService.getAnyoneAnswerFromNickName(
+					nickName
+				);
+				return res.json(anyoneAnswer);
+			}
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
 		}

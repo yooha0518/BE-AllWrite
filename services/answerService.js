@@ -98,7 +98,8 @@ const AnswerService = {
 					}
 				}
 				return { message: "친구 권한이 없습니다." };
-			} else { //전체 공개일경우 
+			} else {
+				//전체 공개일경우
 				return { answerId: answer._id, message: "" };
 			}
 		} catch (error) {
@@ -127,10 +128,10 @@ const AnswerService = {
 	async getPublicAnswers(questionId, skip, limit) {
 		// const answers = await Answer.find({ stateCode: false })
 		const answers = await Answer.find({ questionId, stateCode: true })
-		.sort({ createdAt : -1 })
-		.skip(skip)
-		.limit(limit);
-		
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(limit);
+
 		console.log(`질문 ID(${questionId})에 대한 전체공개 답변을 가져왔습니다.`);
 		return answers;
 		// .populate('nickName'); // stateCode가 false인 글을 조회하고, 작성자 정보를 가져옵니다.
@@ -163,9 +164,9 @@ const AnswerService = {
 			nickName: { $in: friendNicknames },
 			stateCode: false && true,
 		})
-		.sort({ createdAt : -1 })
-		.skip(skip)
-		.limit(limit);
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(limit);
 		return friendOfFriendAnswers;
 	},
 
@@ -197,6 +198,18 @@ const AnswerService = {
 		const deleteResult = await Answer.deleteOne({ _id: answerId });
 		console.log(deleteResult);
 		return { message: "답변이 삭제 되었습니다.", answer: deleteResult };
+	},
+	// 해당 유저의 답변 전체보기
+	async getAllAnswerFromNickName(nickName) {
+		const answer = await Answer.find({ nickName });
+		console.log(answer);
+		return answer;
+	},
+	// 해당 유저의 전체공개 답변 보기
+	async getAnyoneAnswerFromNickName(nickName) {
+		const answer = await Answer.find({ nickName, stateCode: true });
+		console.log(answer);
+		return answer;
 	},
 };
 

@@ -23,6 +23,9 @@ answerRouter.get('/friend/:questionId', getUserFromJwt, answerController.getFrie
 //답변 상세 조회
 answerRouter.get('/detail/:questionId/:answerId', getUserFromJwt, answerController.getDetailAnswers);
 
+//해당 유저의 답변 권한별 조회
+answerRouter.get('/user/:nickName', getUserFromJwt, answerController.getAnswersFromNickName);
+
 //답변 날짜, 유저 검색 조회
 answerRouter.get('/calendar/:questionId/:nickName', getUserFromJwt, answerController.getAnswersFromQuestionAndNickName);
 
