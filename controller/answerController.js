@@ -54,7 +54,7 @@ const AnswerController = {
 	
 	async getDetailAnswers(req, res) {
 		try {
-			const { questionId,answerId } = req.params;
+			const { questionId, answerId } = req.params;
 			console.log('questionId로 답변 조회');
 			console.log("questionId = ",questionId);
 			console.log("answerId = ",answerId);
