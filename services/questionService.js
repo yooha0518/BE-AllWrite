@@ -8,7 +8,11 @@ const questionService = {
 	},
 	//질문 내용  조회
 	async getQuestionfromID(questionId) {
-		const questionContent = await Question.findOne({ _id:questionId });
+		const questionContent = await Question.findOne({ _id: questionId });
+		if (!questionContent) {
+			console.log("없는 질문입니다. ");
+			return "삭제된 질문입니다";
+		}
 		return questionContent.content;
 	},
 	//오늘의 질문 3개 조회

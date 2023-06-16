@@ -192,14 +192,15 @@ const AnswerController = {
 					} catch (err) {
 						console.log(err);
 					}
-					if (content[i]) {
-						answers[i] = {
-							question: content[i],
-							questionId: answers[i].questionId,
-							_id: answers[i]._id,
-						};
-						console.log(`content[${i}]:`, content[i]);
+					if (content[i] === "삭제된 질문입니다") {
+						const result = await answerService.deleteAnswer(answers[i]._id);
+						console.log("답변 삭제 result :", result);
 					}
+					answers[i] = {
+						question: content[i],
+						questionId: answers[i].questionId,
+						_id: answers[i]._id,
+					};
 				}
 				return res.json(answers);
 			}
@@ -225,13 +226,16 @@ const AnswerController = {
 					} catch (err) {
 						console.log(err);
 					}
+					if (content[i] === "삭제된 질문입니다") {
+						const result = await answerService.deleteAnswer(answers[i]._id);
+						console.log("답변 삭제 result :", result);
+					}
 					if (content[i]) {
 						answers[i] = {
 							question: content[i],
 							questionId: answers[i].questionId,
 							_id: answers[i]._id,
 						};
-						console.log(`content[${i}]:`, content[i]);
 					}
 				}
 				return res.json(answers);
@@ -249,6 +253,10 @@ const AnswerController = {
 						);
 					} catch (err) {
 						console.log(err);
+					}
+					if (content[i] === "삭제된 질문입니다") {
+						const result = await answerService.deleteAnswer(answers[i]._id);
+						console.log("답변 삭제 result :", result);
 					}
 					if (content[i]) {
 						answers[i] = {
