@@ -117,7 +117,7 @@ const AnswerController = {
 
 			const { questionId } = req.params;
 			const { nickName } = req.user;
-			
+
 			const result = await answerService.getAnswersByQuestionIdAll(questionId);
 
 			res.status(200).json(result);
@@ -134,12 +134,18 @@ const AnswerController = {
 		try {
 			const { questionId } = req.params;
 			const { nickName } = req.user;
-			const { page } = req.body;
+			const { page } = req.query;
 			const limit = 12;
 			const skip = (page - 1) * limit;
 			const state = 1;
-			if(!page){page = 1;}
-			const answers = await answerService.getPublicAnswers(questionId, skip, limit); // 전체 공개 게시글을 서비스에서 조회합니다.
+			if (!page) {
+				page = 1;
+			}
+			const answers = await answerService.getPublicAnswers(
+				questionId,
+				skip,
+				limit
+			); // 전체 공개 게시글을 서비스에서 조회합니다.
 			const getPrivateAnswer = await answerService.getFriendAnswers(questionId); // 친구 공개 게시글을 서비스에서 조회합니다.
 			const answerCount = answers.length;
 			console.log("전체 공개 게시글 갯수 : ", answerCount);
@@ -149,7 +155,7 @@ const AnswerController = {
 				nickName
 			);
 
-			res.json({ isWriteAnswer, answers, answerCount}); // 조회된 글을 JSON 형태로 응답합니다.
+			res.json({ isWriteAnswer, answers, answerCount }); // 조회된 글을 JSON 형태로 응답합니다.
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
 		}
@@ -178,11 +184,13 @@ const AnswerController = {
 			console.log("친구공개글");
 			const { questionId } = req.params;
 			const { nickName, email } = req.user;
-			const { page } = req.body;
+			const { page } = req.query;
 			const limit = 12;
 			const skip = (page - 1) * limit;
 			const state = 0;
-			if(!page){page = 1;}
+			if (!page) {
+				page = 1;
+			}
 			console.log("questionId : ", questionId);
 			console.log("nickName : ", nickName);
 
@@ -289,6 +297,5 @@ function checkIfMyNicknameExists(publicAnswers, friendAnswers, myNickname) {
 		hasPublicAnswer || hasFriendAnswer || (hasPublicAnswer && hasFriendAnswer)
 	);
 }
-
 
 module.exports = AnswerController;
