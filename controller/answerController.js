@@ -1,4 +1,9 @@
-const { answerService, userService, friendService } = require("../services");
+const {
+	answerService,
+	userService,
+	friendService,
+	questionService,
+} = require("../services");
 const { Answer, User } = require("../models/index");
 
 const AnswerController = {
@@ -166,19 +171,37 @@ const AnswerController = {
 			const { email } = req.user;
 			const { nickName } = req.params;
 
+			let answers;
+
 			//나(email)
 			const user = await userService.getUserFromEmail(email);
 
 			//해당 유저(nickName)
 			const other = await userService.getUserFromNickName(nickName);
 
-			console.log("user.nickName", user.nickName);
-			console.log("other.nickName", other.nickName);
 			if (user.nickName === other.nickName) {
 				// 내 답변 전체 가져오기
 				console.log("자신의 답변은 모두 확인할 수 있습니다!");
-				const answer = await answerService.getAllAnswerFromNickName(nickName);
-				return res.json(answer);
+				const answers = await answerService.getAllAnswerFromNickName(nickName);
+				let content = [];
+				for (let i = 0; i < answers.length; i++) {
+					try {
+						content[i] = await questionService.getQuestionfromID(
+							answers[i].questionId.toString()
+						);
+					} catch (err) {
+						console.log(err);
+					}
+					if (content[i]) {
+						answers[i] = {
+							question: content[i],
+							questionId: answers[i].questionId,
+							_id: answers[i]._id,
+						};
+						console.log(`content[${i}]:`, content[i]);
+					}
+				}
+				return res.json(answers);
 			}
 
 			//해당 유저와 나의 관계 조회
@@ -190,17 +213,53 @@ const AnswerController = {
 			if (friendRelation.isFriend === true) {
 				//해당 유저의 모든 답변 가져오기
 				console.log("해당 유저의 모든 답변 가져오기!");
-				const answer = await answerService.getAllAnswerFromNickName(
+				const answers = await answerService.getAllAnswerFromNickName(
 					other.nickName
 				);
-				return res.json(answer);
+				let content = [];
+				for (let i = 0; i < answers.length; i++) {
+					try {
+						content[i] = await questionService.getQuestionfromID(
+							answers[i].questionId.toString()
+						);
+					} catch (err) {
+						console.log(err);
+					}
+					if (content[i]) {
+						answers[i] = {
+							question: content[i],
+							questionId: answers[i].questionId,
+							_id: answers[i]._id,
+						};
+						console.log(`content[${i}]:`, content[i]);
+					}
+				}
+				return res.json(answers);
 			} else {
 				//해당 유저의 전체공개답변 가져오기
 				console.log("해당 유저의 전체공개답변만! 가져오기");
-				const anyoneAnswer = await answerService.getAnyoneAnswerFromNickName(
+				const answers = await answerService.getAnyoneAnswerFromNickName(
 					nickName
 				);
-				return res.json(anyoneAnswer);
+				let content = [];
+				for (let i = 0; i < answers.length; i++) {
+					try {
+						content[i] = await questionService.getQuestionfromID(
+							answers[i].questionId.toString()
+						);
+					} catch (err) {
+						console.log(err);
+					}
+					if (content[i]) {
+						answers[i] = {
+							question: content[i],
+							questionId: answers[i].questionId,
+							_id: answers[i]._id,
+						};
+						console.log(`content[${i}]:`, content[i]);
+					}
+				}
+				return res.json(answers);
 			}
 		} catch (error) {
 			res.status(500).json({ error: error.message }); // 에러 발생 시 500 상태코드와 에러 메시지를 응답합니다.
