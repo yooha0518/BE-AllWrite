@@ -1,19 +1,5 @@
 const { Question } = require("../models");
 
-let today = new Date();
-let year = today.getFullYear();
-let month = today.getMonth() + 1;
-let day = today.getDate();
-
-if (month < 10) {
-	month = "0" + month;
-}
-if (day < 10) {
-	day = "0" + day;
-}
-
-let currentDate = year + "-" + month + "-" + day;
-
 const questionService = {
 	//질문 전체 조회
 	async getAllQuestion() {
@@ -62,6 +48,19 @@ const questionService = {
 	},
 	//질문 날짜 초기화
 	async resetQuestionDate() {
+		let today = new Date();
+		let year = today.getFullYear();
+		let month = today.getMonth() + 1;
+		let day = today.getDate();
+
+		if (month < 10) {
+			month = "0" + month;
+		}
+		if (day < 10) {
+			day = "0" + day;
+		}
+
+		let currentDate = year + "-" + month + "-" + day;
 		let question = await Question.find({ date: currentDate });
 		console.log("question", question);
 		for (let i = 0; i < question.length; i++) {
