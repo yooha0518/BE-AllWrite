@@ -37,7 +37,7 @@ const AnswerService = {
 
 			// 좋아요 정보 조회
 			const like = await Like.findOne({ answerId });
-			
+
 			const likeCount = like.like ? like.like.length : 0;
 
 			// 좋아요 여부를 나타내는 flag
@@ -70,6 +70,26 @@ const AnswerService = {
 				`질문 ID(${questionId})에 대한 전체 공개 답변을 가져왔습니다.`
 			);
 			return answers;
+		} catch (error) {
+			console.error("답변 가져오기 중 오류 발생:", error);
+			throw error;
+		}
+	},
+	async getAnswerFormQuestionAndNickaname(questionId, nickName, email) {
+		try {
+			const user = await User.findOne({ email }); //나
+			const other = await User.findOne({ nickName }); //검색한 유저
+			const friends = await Friend.findOne({ email: other.email }); //nickName의 친구들
+			const answers = await Answer.findOne({ questionId, nickName }); //해당 답변에 작성한 해당 유저의 답변
+
+			friends.friends.push({ nickName: other.nickName });
+
+			for (let i = 0; i < friends.friends.length; i++) {
+				if (friends.friends[i].nickName === user.nickName) {
+					return answers;
+				}
+			}
+			return { message: "친구 권한이 없습니다." };
 		} catch (error) {
 			console.error("답변 가져오기 중 오류 발생:", error);
 			throw error;

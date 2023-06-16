@@ -23,9 +23,11 @@ answerRouter.get('/friend/:questionId', getUserFromJwt, answerController.getFrie
 //답변 상세 조회
 answerRouter.get('/detail/:questionId/:answerId', getUserFromJwt, answerController.getDetailAnswers);
 
+//답변 날짜, 유저 검색 조회
+answerRouter.get('/calendar/:questionId/:nickName', getUserFromJwt, answerController.getAnswersFromQuestionAndNickName);
+
 // 답변 신고
 answerRouter.post('/complaint/:questionId/:answerId', getUserFromJwt, answerController.reportAnswer );
-
 
 //답변 수정
 answerRouter.put('/:questionId/:answerId', getUserFromJwt, answerController.putAnswer);
