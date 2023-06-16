@@ -6,6 +6,11 @@ const questionService = {
 		const allQuestion = await Question.find({});
 		return allQuestion;
 	},
+	//질문 내용  조회
+	async getQuestionfromID(questionId) {
+		const questionContent = await Question.findOne({ _id:questionId });
+		return questionContent.content;
+	},
 	//오늘의 질문 3개 조회
 	async getTodayQuestion() {
 		let today = new Date();
