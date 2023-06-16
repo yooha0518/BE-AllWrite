@@ -35,9 +35,10 @@ const AnswerService = {
 			const answers = await Answer.find({ _id: answerId });
 			// const likeCount = await Like.countDocuments({ answerId,nickName });
 			// 좋아요 정보 조회
-			const like = await Like.findOne({ answerId });
-
-			const likeCount = like.like ? like.like.length : 0;
+			const like = await Like.findOne({ answerId: answerId });
+			console.log("like", like);
+			console.log("서비스에서 answerId", answerId);
+			const likeCount = like && like.like ? like.like.length : 0;
 
 			// 좋아요 여부를 나타내는 flag
 			// const isLiked = like && like.like && like.like.some((item) => item.nickName === nickName);
@@ -47,6 +48,7 @@ const AnswerService = {
 			}
 
 			console.log("좋아요 눌렀나?", isLiked);
+
 			const comments = await Comment.find({ answerId });
 			console.log(`질문 ID(${answerId})에 대한 답변 상세를 가져왔습니다.`);
 			return { answers, likeCount, isLiked, comments };
