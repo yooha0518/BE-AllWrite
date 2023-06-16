@@ -33,9 +33,12 @@ const AnswerService = {
 	async getDetailAnswers(questionId, answerId, nickName) {
 		try {
 			const answers = await Answer.find({ _id: answerId });
-			const likeCount = await Like.countDocuments({ answerId });
+			// const likeCount = await Like.countDocuments({ answerId,nickName });
+
 			// 좋아요 정보 조회
 			const like = await Like.findOne({ answerId });
+			
+			const likeCount = like.like ? like.like.length : 0;
 
 			// 좋아요 여부를 나타내는 flag
 			const isLiked =
