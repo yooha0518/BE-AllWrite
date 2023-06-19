@@ -1,8 +1,10 @@
-const { Schema } = require('mongoose');
-const shortId = require('./types/short-id');
+const { Schema } = require("mongoose");
 const UserSchema = new Schema(
 	{
-		shortId,
+		nickName: {
+			type: String,
+			required: true,
+		},
 		name: {
 			type: String,
 			required: true,
@@ -17,12 +19,29 @@ const UserSchema = new Schema(
 			required: true,
 			select: false,
 		},
+		mbti: {
+			type: String,
+			default: null,
+		},
+		intro: {
+			type: String,
+			default: null,
+		},
 		profileImage: {
 			type: String,
+			default: "https://allwrite.kro.kr/image/defaultImage.png",
+		},
+		experience: {
+			type: Number,
+			default: 0,
 		},
 		refreshToken: {
 			type: String,
 			select: false,
+		},
+		isAdmin: {
+			type: Boolean,
+			default: false,
 		},
 		isTempPassword: {
 			type: Boolean,

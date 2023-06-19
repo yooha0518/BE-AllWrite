@@ -13,8 +13,8 @@ module.exports = (req, res, next) => {
 					.status(500)
 					.send({ message: `토큰검증 미들웨어 에러: ${err.message}` });
 			} else {
-				const { shortId } = req.user;
-				const userRefreshToken = await userService.getUserRefreshToken(shortId);
+				const { email } = req.user;
+				const userRefreshToken = await userService.getUserRefreshToken(email);
 				const InputRefreshToken = req.headers.authorization.substring(7);
 
 				if (userRefreshToken.refreshToken === InputRefreshToken) {
