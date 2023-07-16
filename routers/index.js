@@ -6,8 +6,11 @@ const answerRouter = require("./answer");
 const commentRouter = require("./comment");
 const likeRouter = require("./like");
 const adminUserRouter = require("./adminUser");
+const adminFunctionRouter = require("./adminFunction");
 const friendRouter = require("./friend.js");
 const questionRouter = require("./question.js");
+const emotionRouter = require("./emotion.js");
+const mypageRouter = require("./mypage.js");
 const getUserFromJwt = require("../middlewares/getUserFromJwt");
 
 router.get("/", (req, res) => {
@@ -18,8 +21,11 @@ router.use("/user", userRouter);
 router.use("/auth", authRouter);
 router.use("/friend", friendRouter);
 router.use("/adminUser", getUserFromJwt, adminUserRouter);
-router.use("/answer", answerRouter);
+router.use("/adminFunction", getUserFromJwt, adminFunctionRouter);
+router.use("/question/answer", answerRouter);
 router.use("/question", questionRouter);
-router.use("/answer/:answerId/comment", commentRouter);
-router.use("/answer/:answerId/like", likeRouter);
+router.use("/answer/comment", commentRouter);
+router.use("/answer/like", likeRouter);
+router.use("/emotion", emotionRouter);
+router.use("/mypage", mypageRouter);
 module.exports = router;

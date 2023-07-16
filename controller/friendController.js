@@ -28,6 +28,23 @@ const friendController = {
 				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
 		}
 	},
+	//특정 친구 관계 조회
+	async getRelationFriend(req, res) {
+		try {
+			const { email } = req.user;
+			const { friendNickName } = req.body;
+			const relation = await friendService.getRelationFriend(
+				email,
+				friendNickName
+			);
+			return res.status(200).json(relation);
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 friendContrller에서 에러가 났습니다." });
+		}
+	},
 	//친구 요청 보내기
 	async sendFriend(req, res) {
 		try {
@@ -150,7 +167,10 @@ const friendController = {
 					.json({ message: "해당 유저는 요청을 보내지 않았습니다." });
 			}
 
-			const friendReq = await friendService.rejectFriendReq(email,friendNickName);
+			const friendReq = await friendService.rejectFriendReq(
+				email,
+				friendNickName
+			);
 
 			return res.status(200).json(friendReq);
 		} catch (error) {
@@ -166,13 +186,14 @@ const friendController = {
 			const { friendNickName } = req.params;
 			const { email, nickName } = req.user;
 			const friend = await userService.getUserFromNickName(friendNickName);
+			console.log("friend: ", friend);
 			if (friend === null) {
 				return res.status(400).json({ message: "해당 유저는 없습니다." });
 			}
 			const result = await friendService.deleteFriend(
 				email,
 				nickName,
-				friendEmail,
+				friend.email,
 				friend.nickName
 			);
 			return res.status(200).json({

@@ -9,6 +9,9 @@ friendRouter.get("/", getUserFromJwt, friendController.getfriendtable);
 //친구 전체 조회
 friendRouter.get("/all", getUserFromJwt, friendController.getAllfriends);
 
+//친구 관계 조회
+friendRouter.post("/relation", getUserFromJwt, friendController.getRelationFriend);
+
 //친구 요청
 friendRouter.post("/request", getUserFromJwt, friendController.sendFriend);
 

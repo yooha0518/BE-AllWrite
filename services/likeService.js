@@ -1,43 +1,51 @@
-const Like = require('../models/schemas/like');
+const {Like} = require('../models');
+
 
 // Create a new like
-exports.createLike = async (answerId, nickName) => {
-  try {
-    const like = await Like.findOne({ answerId });
+const likeService = {
+  //조항요
+  async createLike  (answerId, nickName) {
+    let like = await Like.findOne({ answerId });
 
     if (!like) {
-      // If no like exists for the answerId, create a new like
-      const newLike = new Like({
+      await Like.create({
         answerId,
         like: [{ nickName }],
       });
-
-      await newLgiike.save();
-
-      return newLike;
+      console.log(`[${answerId}]에 대한 좋아요가 생성되었습니다.`);
     } else {
-      // If like exists for the answerId, add the new nickname to the like array
-      like.like.push({ nickName });
-      await like.save();
+      const isLiked = like.like.some((item) => item.nickName === nickName);
+      if (isLiked) {
+        console.log(`[${answerId}]에 대한 좋아요는 이미 존재합니다.`);
+        return like;
+      }
 
-      return like;
+      like = await Like.findOneAndUpdate(
+        { answerId },
+        { $push: { like: { nickName } } },
+        { new: true }
+      );
+      console.log(`[${answerId}]에 대한 좋아요가 추가되었습니다.`);
     }
-  } catch (err) {
-    throw err;
-  }
-};
+    return like;
+    },
 
-// Delete a like
-exports.deleteLike = async (likeId) => {
-  try {
-    const like = await Like.findById(likeId);
-
-    if (!like) {
-      throw new Error('Like not found');
-    }
-
-    await like.remove();
-  } catch (err) {
-    throw err;
-  }
-};
+    	// like 조회
+	async getLike(answerId) {
+		const like = await Like.find( { answerId} );
+		return like;
+	},
+  
+  // Delete a like
+  async deleteLike (answerId) {
+      const like = await Like.deleteOne({answerId:answerId});
+  
+      if (!like) {
+        throw new Error('Like not found');
+      }
+  
+    return like;
+  },
+  
+}
+module.exports = likeService;

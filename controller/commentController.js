@@ -4,19 +4,54 @@ const { Comment } = require('../models/index');
 
 const CommentController = {
   //댓글 생성
-	async createComment(req, res, next) {
+	async createComment(req, res) {
 		try {
 			console.log('댓글 생성!');
-      const { answerId, nickName } = req.user;
+      const {  nickName, profileImage } = req.user;
+			const { answerId } = req.params;
       const { content } = req.body;
-      const savedComment = await commentService.createComment(answerId, nickName, content);
-      res.status(201).json(savedComment);
+			
+			console.log(answerId, nickName);
+
+      const savedComment = await commentService.createComment({answerId, nickName, content,profileImage});
+
+      res.status(201).json({message:"댓글을 생성했습니다.", savedComment:savedComment});
 		} catch (error) {
 			console.log(error);
 			return res
 				.status(500)
 				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
 		}
+	},
+	
+	async reportComment(req, res) {
+		try {
+			console.log("reportComment 실행")
+			const { answerId, commentId } = req.params;
+			const {profileImage} = req.user;
+			// 답변 조회
+      const result = await commentService.reportComment(answerId,commentId,profileImage);
+			res.status(200).json({ message: '댓글이 신고되었습니다.' });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
+		}
+	},
+
+	async getCommentByAnswerId(req, res) {
+		try {
+			const { answerId } = req.params;
+			const {profileImage} =req.user;
+			console.log(answerId,profileImage)
+      // db에서 모든 게시글 조회
+      const result = await commentService.getCommentByAnswerId(answerId,profileImage);
+      res.status(200).json(result);
+    } catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: '서버의 commentContrller에서 에러가 났습니다.' });
+    }
 	},
   //전체 댓글 조회
 	async getCommentAll(req, res) {
@@ -62,6 +97,7 @@ const CommentController = {
     try {
       const commentId = req.params.commentId;
       const { content } = req.body;
+			console.log(commentId);
       const comment = await commentService.getComment(commentId);
       if (!comment) {
         throw new Error("댓글을 찾을 수 없습니다.");
@@ -76,7 +112,7 @@ const CommentController = {
 
       res
         .status(200)
-        .json({ message: "댓글이 수정되었습니다." });
+        .json({ message: "댓글이 수정되었습니다." ,comment:comment});
 		} catch (error) {
 			console.log(error);
 			return res
@@ -89,12 +125,14 @@ const CommentController = {
 		try {
 			console.log('검색 댓글 삭제');
 		// req.params에서 게시글id 가져옴
-		const commentId = req.params.commentId;
+		const {answerId, commentId} = req.params;
 		const comment = await commentService.getComment(commentId);
 
-		// 해당 id의 게시글 db에서 삭제
-		const deletedComment = await commentService.deleteComment(comment);
+			console.log(answerId, commentId);
 
+		// 해당 id의 게시글 db에서 삭제
+		const deletedComment = await commentService.deleteComment(commentId);
+			console.log("댓글 삭제")
 		// 삭제
 		res.send(deletedComment);			
 		}	catch (error) {

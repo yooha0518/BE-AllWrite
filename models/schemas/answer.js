@@ -5,6 +5,10 @@ const AnswerSchema = new Schema(
 			type: String,
 			ref: 'user',
 		},
+    questionId:	{
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
 		content:	{
         type: String,
         required: true,
@@ -25,9 +29,13 @@ const AnswerSchema = new Schema(
       reportCount:{
         type:Number,
         required : true,
-      }
+      },
+      profileImage: {
+        type: String,  // Assuming profileImage is of string type
+        required: false,
+      },
 	},
-	{ timestamps: true }
+	{ timestamps: false }
 );
 
 module.exports = AnswerSchema;

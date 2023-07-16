@@ -3,7 +3,7 @@ const multer = require("multer");
 const upload = multer({
 	storage: multer.diskStorage({
 		destination(req, file, callback) {
-			callback(null, "public/");
+			callback(null, "public/image");
 		},
 		filename(req, file, callback) {
 			const extension = file.originalname.split(".").pop();

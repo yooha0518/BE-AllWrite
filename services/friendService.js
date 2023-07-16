@@ -26,7 +26,7 @@ const friendService = {
 	async getRequest(email, friendNickName) {
 		const user = await Friend.findOne({ email });
 		for (const item of user.req_friends) {
-			if (friendNickName === item.friendNickName) {
+			if (friendNickName === item.nickName) {
 				return true;
 			}
 		}
@@ -36,7 +36,7 @@ const friendService = {
 		const user = await Friend.findOne({ email });
 
 		for (const item of user.res_friends) {
-			if (friendNickName === item.friendNickName) {
+			if (friendNickName === item.nickName) {
 				return true;
 			}
 		}
@@ -46,11 +46,38 @@ const friendService = {
 		const userFriend = await Friend.findOne({ email }, "friends");
 
 		for (const item of userFriend.friends) {
-			if (friendNickName === item.friendNickName) {
+			if (friendNickName === item.nickName) {
 				return true;
 			}
 		}
 		return false;
+	},
+	//친구 관계 확인
+	async getRelationFriend(email, friendNickName) {
+		const userFriend = await Friend.findOne({ email }, "friends");
+		const userReqFriend = await Friend.findOne({ email }, "req_friends");
+		const userResFriend = await Friend.findOne({ email }, "res_friends");
+
+		let isFriend = false;
+		let isReqFriend = false;
+		let isResFriend = false;
+
+		for (const item of userFriend.friends) {
+			if (friendNickName === item.nickName) {
+				isFriend = true;
+			}
+		}
+		for (const item of userReqFriend.req_friends) {
+			if (friendNickName === item.nickName) {
+				isReqFriend = true;
+			}
+		}
+		for (const item of userResFriend.res_friends) {
+			if (friendNickName === item.nickName) {
+				isResFriend = true;
+			}
+		}
+		return { isFriend, isReqFriend, isResFriend };
 	},
 	// 친구 닉네임으로 요청 보내기
 	async createFriendReq(email, friendNickName) {
@@ -160,13 +187,21 @@ const friendService = {
 	},
 	// 친구 요청 거절
 	async rejectFriendReq(email, friendNickName) {
-		const result1 = await Friend.updateOne(
+		const user = await User.findOne({ email });
+		const friend = await User.findOne({ nickName: friendNickName });
+		const userResult = await Friend.updateOne(
 			{ email },
 			{
 				$pull: { res_friends: { nickName: friendNickName } },
 			}
 		);
-		return result1;
+		const friendResult = await Friend.updateOne(
+			{ email: friend.email },
+			{
+				$pull: { req_friends: { nickName: user.nickName } },
+			}
+		);
+		return { userResult, friendResult };
 	},
 	// 친구 테이블 전체 정보 조회
 	async getFriendTable(email) {
@@ -176,16 +211,17 @@ const friendService = {
 
 	// 친구 삭제
 	async deleteFriend(email, nickName, friendEmail, friendNickName) {
+		console.log("all: ", email, nickName, friendEmail, friendNickName);
 		const result1 = await Friend.updateOne(
 			{ email },
 			{
-				$pull: { friends: { friendNickName: friendNickName } },
+				$pull: { friends: { nickName: friendNickName } },
 			}
 		);
 		const result2 = await Friend.updateOne(
-			{ friendEmail },
+			{ email: friendEmail },
 			{
-				$pull: { friends: { friendNickName: nickName } },
+				$pull: { friends: { nickName: nickName } },
 			}
 		);
 		return { result1, result2 };

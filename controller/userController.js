@@ -67,7 +67,7 @@ const userController = {
 					await sendMail(
 						email,
 						`All Write 인증번호`,
-						"All Write 임시 비밀번호",
+						"이메일 인증번호",
 						`${authCode}`,
 						7
 					);
@@ -83,6 +83,21 @@ const userController = {
 				user = await userService.getUser(email);
 				return res.json(user);
 			}
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
+	},
+	async getOneUser(req, res) {
+		try {
+			const { nickName } = req.params;
+			const user = await userService.SearchUser(nickName);
+			if (!user) {
+				return res.status(400).json({ message: "해당 유저가 없습니다." });
+			}
+			res.json(user);
 		} catch (error) {
 			console.log(error);
 			return res
@@ -108,7 +123,23 @@ const userController = {
 	async putProfileImage(req, res) {
 		try {
 			const { email } = req.user;
-			const profileImage = `http://allwrite.kro.kr:5000/${req.file.filename}`;
+			const profileImage = `https://allwrite.kro.kr/image/${req.file.filename}`;
+			const result = await userService.updateProfileImage(email, profileImage);
+			res.status(200).json({
+				message: "이미지가 수정되었습니다.",
+				result: result,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
+		}
+	},
+	async adminPutProfileImage(req, res) {
+		try {
+			const { email } = req.params;
+			const profileImage = `https://allwrite.kro.kr/image/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 수정되었습니다.",
@@ -138,8 +169,9 @@ const userController = {
 	},
 	async deleteProfileImate(req, res) {
 		try {
+			console.log("프로필사진 수정 시작");
 			const { email } = req.user;
-			const profileImage = `http://allwrite.kro.kr:5000/defaultImage.png`;
+			const profileImage = `https://allwrite.kro.kr/image/defaultImage.png`;
 			const result = await userService.updateProfileImage(email, profileImage);
 			res.status(200).json({
 				message: "이미지가 삭제되었습니다.",
@@ -168,8 +200,8 @@ const userController = {
 			await sendMail(
 				email,
 				"All Write 임시 비밀번호",
+				"임시 비밀번호",
 				`${tempPassword}`,
-				`로그인후 비밀번호를 변경해 주세요.`,
 				7
 			);
 
@@ -253,25 +285,10 @@ const userController = {
 			token: setUserToken(userForToken, 1),
 		});
 	},
-	async getOneUser(req, res) {
-		try {
-			const { nickName } = req.params;
-			const user = await userService.SearchUser(nickName);
-			if (!user) {
-				return res.status(400).json({ message: "해당 유저가 없습니다." });
-			}
-			res.json(user);
-		} catch (error) {
-			console.log(error);
-			return res
-				.status(500)
-				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
-		}
-	},
 	async adminGetUserlist(req, res) {
 		try {
 			const page = Number(req.query.page || 1);
-			const userlist = await userService.adminReadUser(page);
+			const userlist = await userService.adminReadUser();
 			res.json(userlist);
 		} catch (error) {
 			console.log(error);
@@ -325,21 +342,21 @@ const userController = {
 				.json({ message: "서버의 userContrller에서 에러가 났습니다." });
 		}
 	},
-	async adminsendEmail(req, res) {
+	async sendEmail(req, res) {
 		try {
 			console.log("adminsendEmail 실행");
-			const { email } = req.body;
-			const user = await userService.getUserFromEmail(email);
+			const { nickName } = req.body;
+			const user = await userService.getUserFromNickName(nickName);
 			await sendMail(
-				email,
+				user.email,
 				`All Write 경고`,
-				`${user.nickName}님이 작성하신 글이 신고접수 되었습니다. `,
+				`${nickName}님이 작성하신 글이 신고접수 되었습니다. `,
 				`신고 접수가 누적될경우, 예고없이 강제 탈퇴될 수 있습니다.`,
 				4
 			);
 			res
 				.status(200)
-				.json({ message: `${email}으로 경고메일을 전송했습니다.` });
+				.json({ message: `${user.email}으로 경고메일을 전송했습니다.` });
 		} catch (error) {
 			console.log(error);
 			return res
