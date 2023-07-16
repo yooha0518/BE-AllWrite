@@ -13,6 +13,9 @@ userRouter.get('/', getUserFromJwt, userController.getUser);
 //사용자 정보 수정
 userRouter.put('/', getUserFromJwt, userController.putUser);
 
+//사용자 경험치 증가
+userRouter.put('/exp', getUserFromJwt, userController.addUserExp);
+
 //사용자 계정 휴면
 userRouter.delete('/', getUserFromJwt, userController.deleteUser);
 
@@ -21,6 +24,7 @@ userRouter.post('/resetPassword', userController.resetPassword);
 
 //사용자 비밀번호 변경
 userRouter.post('/changePassword', getUserFromJwt, userController.putPassword);
+
 
 //사용자 프로필사진 등록
 userRouter.post(
@@ -40,6 +44,10 @@ userRouter.delete(
 userRouter.post('/emailAuth', userController.getUser);
 
 //사용자 진짜 삭제
-userRouter.delete('/:shortId', userController.realDeleteUser);
+userRouter.delete('/:email', userController.realDeleteUser);
+
+//특정 유저 검색
+userRouter.get('/:nickName',userController.getOneUser);
+
 
 module.exports = userRouter;

@@ -10,7 +10,7 @@ const jwtOptions = {
 
 const accessJwtStrategy = new JwtStrategy(jwtOptions, async (payload, done) => {
 	try {
-		const user = await User.findOne({ shortId: payload.shortId });
+		const user = await User.findOne({ email: payload.email });
 
 		return done(null, user);
 	} catch {

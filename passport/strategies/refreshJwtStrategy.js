@@ -13,8 +13,8 @@ const refreshJwtStrategy = new JwtStrategy(
 	async (payload, done) => {
 		try {
 			const user = await User.findOne(
-				{ shortId: payload.shortId },
-				{ refreshToken: 1, shortId: 1 }
+				{ email: payload.email },
+				{ refreshToken: 1, email: 1 }
 			);
 
 			return done(null, user);
