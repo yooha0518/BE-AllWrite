@@ -1,10 +1,10 @@
 const { questionService } = require("../services");
-const { OPENAI_API_KEY } = require("../.env");
+// const { OPENAI_API_KEY } = require("../.env");
 const { Configuration, OpenAIApi } = require("openai");
 
 //AI 질문 생성
 async function createAIQuestion() {
-	const api_key = OPENAI_API_KEY;
+	const api_key = process.env.OPENAI_API_KEY;
 	const prompt = "재밌는 질문 한개";
 	console.log("질문을 생성합니다 ");
 	try {
