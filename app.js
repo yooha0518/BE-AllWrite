@@ -1,8 +1,8 @@
-const createError = require('http-errors');
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const passport = require('passport');
+const createError = require("http-errors");
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const passport = require("passport");
 // const env = require('./.env');
 const app = express();
 const https = require("https");
@@ -68,10 +68,10 @@ app.use((req, res) => {
 });
 
 //서버연결
-app.listen(process.env.PORT, '0.0.0.0', (err) => {
+app.listen(process.env.PORT, "0.0.0.0", (err) => {
 	if (err) {
 		console.log(`서버 연결 실패 : ${err}`);
 	} else {
-		console.log(`${env.PORT}서버 연결 성공`);
+		console.log(`${process.env.PORT}서버 연결 성공`);
 	}
 });
