@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
 const mjml2html = require('mjml');
-const env = require('../.env');
+// const env = require('../.env');
 const transport = nodemailer.createTransport({
 	service: 'Gmail',
 	auth: {
 		user: '518hayoung@gmail.com',
-		pass: env.NODEMAILERKEY,
+		pass: process.env.NODEMAILERKEY,
 	},
 });
 

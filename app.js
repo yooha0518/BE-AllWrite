@@ -3,14 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const env = require('./.env');
+// const env = require('./.env');
 const app = express();
 
 //routers
 const apiRouter = require('./routers');
 
 //db연결
-mongoose.connect(env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI);
 
 mongoose.connection.on('connected', () => {
 	console.log('MongoDB Connected');
@@ -62,7 +62,7 @@ app.use((req, res) => {
 	throw createError(404);
 });
 //서버연결
-app.listen(env.PORT, '0.0.0.0', (err) => {
+app.listen(process.env.PORT, '0.0.0.0', (err) => {
 	if (err) {
 		console.log(`서버 연결 실패 : ${err}`);
 	} else {

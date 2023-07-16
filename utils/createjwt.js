@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const env = require('../.env');
+// const env = require('../.env');
 const { User } = require('../models/index');
 
 exports.setUserToken = (user, isOnlyAccess) => {
@@ -12,7 +12,7 @@ exports.setUserToken = (user, isOnlyAccess) => {
 		isTempPassword: user.isTempPassword,
 	};
 	const accessOptions = { algorithm: 'HS256', expiresIn: '1h' };
-	const accessToken = jwt.sign(accessPayload, env.ACCESSSECRET, accessOptions);
+	const accessToken = jwt.sign(accessPayload, process.env.ACCESSSECRET, accessOptions);
 
 	if (!isOnlyAccess) {
 		const refreshPayload = {
@@ -21,7 +21,7 @@ exports.setUserToken = (user, isOnlyAccess) => {
 		const refreshOptions = { algorithm: 'HS256', expiresIn: '7d' };
 		const refreshToken = jwt.sign(
 			refreshPayload,
-			env.REFRESHSECRET,
+			process.env.REFRESHSECRET,
 			refreshOptions
 		);
 		User.updateOne(
