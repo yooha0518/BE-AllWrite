@@ -1,4 +1,4 @@
-const JwtStrategy = require('passport-jwt').Strategy;
+const JwtStrategy = require('passport-local').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 // const env = require('../../.env');
 const { User } = require('../../models/index.js');

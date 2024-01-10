@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const passport = require("passport");
-// const env = require('./.env');
+const env = require('./.env');
 const app = express();
 const https = require("https");
 const fs = require("fs");
@@ -12,7 +12,7 @@ const fs = require("fs");
 const apiRouter = require("./routers");
 
 //db연결
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(env.MONGO_URI);
 
 mongoose.connection.on("connected", () => {
 	console.log("MongoDB Connected");
@@ -68,10 +68,10 @@ app.use((req, res) => {
 });
 
 //서버연결
-app.listen(process.env.PORT, "0.0.0.0", (err) => {
+app.listen(env.PORT, "0.0.0.0", (err) => {
 	if (err) {
 		console.log(`서버 연결 실패 : ${err}`);
 	} else {
-		console.log(`${process.env.PORT}서버 연결 성공`);
+		console.log(`${env.PORT}서버 연결 성공`);
 	}
 });
