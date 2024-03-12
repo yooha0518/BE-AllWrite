@@ -80,6 +80,7 @@ const userController = {
 			} else {
 				//일반 정보 조회
 				const { email } = req.user;
+				console.log(`${email}의 정보를 조회합니다.`)
 				user = await userService.getUser(email);
 				return res.json(user);
 			}

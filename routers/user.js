@@ -8,7 +8,10 @@ const upload = require('../utils/upload.js');
 userRouter.post('/', userController.postUser, userController.authUser);
 
 //사용자 정보 조회
-userRouter.get('/', getUserFromJwt, userController.getUser);
+userRouter.get('/',(req,res,next)=>{
+	console.log("hi");
+	next();
+}, getUserFromJwt, userController.getUser);
 
 //사용자 정보 수정
 userRouter.put('/', getUserFromJwt, userController.putUser);

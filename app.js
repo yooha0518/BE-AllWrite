@@ -5,8 +5,6 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const env = require('./.env');
 const app = express();
-const https = require("https");
-const fs = require("fs");
 
 //routers
 const apiRouter = require("./routers");
