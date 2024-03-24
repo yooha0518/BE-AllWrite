@@ -74,6 +74,7 @@ const userService = {
 		return result;
 	},
 	async updateProfileImage(email, profileImage) {
+		console.log(`${email}의 프로필을 수정합니다. [Service]`);
 		const result = await User.updateOne(
 			{ email },
 			{
