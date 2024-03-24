@@ -29,7 +29,7 @@ const UserSchema = new Schema(
 		},
 		profileImage: {
 			type: String,
-			default: "https://allwrite.kro.kr/image/defaultImage.png",
+			default: "allwrite.tplinkdns.com:5000/image//defaultImage.png",
 		},
 		experience: {
 			type: Number,
