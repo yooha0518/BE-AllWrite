@@ -7,6 +7,7 @@ const upload = multer({
 		},
 		filename(req, file, callback) {
 			const extension = file.originalname.split(".").pop();
+			// console.log(`파일이름은 ${ req.user.nickName + "." + extension} 입니다.`);
 			callback(null, req.user.nickName + "." + extension);
 		},
 	}),
